@@ -1,9 +1,10 @@
-FROM ubuntu:24.04
+FROM debian:sid
 LABEL maintainer="Vasyl Liutikov <pingwinator@gmail.com>"
-# install binary and remove cache
+
+# Install sysbench from repository
 RUN apt-get update && apt-get install -y --no-install-recommends \
     sysbench \
     && rm -rf /var/lib/apt/lists/*
 
-#run cpu test with 20k prime
+# Run cpu test with 20k prime
 ENTRYPOINT ["/usr/bin/sysbench", "cpu", "--cpu-max-prime=20000", "run"]
