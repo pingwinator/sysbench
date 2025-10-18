@@ -562,4 +562,140 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 
 ---
 
+## 32-bit Architecture Testing
+
+To validate multi-architecture support and measure performance impact, we tested 32-bit container images on 64-bit host systems.
+
+### Test Methodology
+
+- **32-bit validation**: Confirmed with `getconf LONG_BIT` returning 32
+- **Library verification**: Checked linked libraries (i386-linux-gnu for x86, armhf for ARM)
+- **Platforms tested**:
+  - `linux/386` (32-bit x86) on Intel/AMD 64-bit systems
+  - `linux/arm/v7` (32-bit ARM) on ARM64 system
+
+### CPU Performance: 64-bit vs 32-bit Comparison
+
+| System | Processor | Mode | Single-Thread | Multi-Thread | MT Speedup | Performance Loss |
+|--------|-----------|------|---------------|--------------|------------|-----------------|
+| System 1 | i5-13600 | **64-bit** | **1,641.95** | **18,113.55** | 11.0x | - |
+| System 1 | i5-13600 | **32-bit** | 409.28 | 5,723.67 | 14.0x | **-75% / -68%** |
+| System 2 | RK3588S | **64-bit** | **979.66** | **5,273.76** | 5.4x | - |
+| System 2 | RK3588S | **32-bit** | 58.92 | 362.49 | 6.2x | **-94% / -93%** |
+| System 3 | Pentium N6005 | **64-bit** | **775.24** | **3,077.02** | 4.0x | - |
+| System 3 | Pentium N6005 | **32-bit** | 268.34 | 1,064.23 | 4.0x | **-65% / -65%** |
+| System 5 | Celeron 1007U | **64-bit** | **161.32** | **290.40** | 1.8x | - |
+| System 5 | Celeron 1007U | **32-bit** | 108.98 | 193.44 | 1.8x | **-32% / -33%** |
+
+### Memory Performance: 64-bit vs 32-bit Comparison
+
+| System | Processor | Mode | Write (MiB/s) | Read (MiB/s) | R/W Ratio | Performance Loss |
+|--------|-----------|------|---------------|--------------|-----------|-----------------|
+| System 1 | i5-13600 | **64-bit** | **18,617** | **104,141** | 5.6x | - |
+| System 1 | i5-13600 | **32-bit** | 16,001 | 41,990 | 2.6x | **-14% / -60%** |
+| System 2 | RK3588S | **64-bit** | **11,463** | **19,457** | 1.7x | - |
+| System 2 | RK3588S | **32-bit** | 3,532 | 4,006 | 1.1x | **-69% / -79%** |
+| System 3 | Pentium N6005 | **64-bit** | **11,611** | **25,173** | 2.2x | - |
+| System 3 | Pentium N6005 | **32-bit** | 7,524 | 9,661 | 1.3x | **-35% / -62%** |
+| System 5 | Celeron 1007U | **64-bit** | **3,145** | **5,148** | 1.6x | - |
+| System 5 | Celeron 1007U | **32-bit** | 1,768 | 2,152 | 1.2x | **-44% / -58%** |
+
+### Performance Impact Analysis
+
+**CPU Performance Loss (64-bit → 32-bit):**
+```
+i5-13600       ████████████████████ -75% single / -68% multi
+Pentium N6005  ████████████████▌    -65% single / -65% multi
+Celeron 1007U  ████████             -32% single / -33% multi
+RK3588S (ARM)  ████████████████████▌ -94% single / -93% multi 🔥
+```
+
+**Memory Read Performance Loss (64-bit → 32-bit):**
+```
+i5-13600       ████████████████████████ -60% read
+Pentium N6005  ████████████████████▌    -62% read
+Celeron 1007U  ███████████████████      -58% read
+RK3588S (ARM)  ████████████████████████▌ -79% read 🔥
+```
+
+### Key Findings
+
+**1. ARM 32-bit is Catastrophically Slow**
+- **Orange Pi 5 (RK3588S)**: 94% CPU performance loss, 79% memory read loss
+- Single-thread: 58.92 evt/s (32-bit) vs 979.66 evt/s (64-bit) = **16.6x slower**
+- Multi-thread: 362.49 evt/s (32-bit) vs 5,273.76 evt/s (64-bit) = **14.5x slower**
+- **Conclusion**: ARMv7 is essentially unusable on modern ARM64 SoCs
+
+**2. Modern x86 CPUs Lose More in 32-bit Mode**
+- **i5-13600** (2023): 75% single-thread loss, 68% multi-thread loss
+- **Pentium N6005** (2021): 65% single-thread loss, 65% multi-thread loss
+- **Celeron 1007U** (2012): 32% single-thread loss, 33% multi-thread loss (best!)
+
+**Why newer CPUs lose more?**
+- Modern extensions (AVX2, AVX-VNNI) unavailable in 32-bit mode
+- Fewer general-purpose registers (8 vs 16)
+- Less optimized compiler paths for 32-bit
+- Hybrid architectures (P+E cores) optimized for 64-bit workloads
+
+**3. Legacy CPUs Handle 32-bit Better**
+- **Celeron 1007U** (Ivy Bridge, 2012) shows smallest performance loss
+- Designed when 32-bit was still mainstream
+- Simple architecture without 64-bit-specific optimizations
+- **Verdict**: Old hardware is better suited for 32-bit workloads
+
+**4. Memory Performance Degrades Significantly**
+- **Read performance hit**: 58-79% across all platforms
+- **Write performance**: Better than read, 14-69% loss
+- i5-13600: Read/Write ratio drops from 5.6x to 2.6x in 32-bit mode
+- **Conclusion**: 32-bit addressing limits memory subsystem optimization
+
+**5. Multi-threading Scales Differently**
+- **i5-13600**: Better scaling in 32-bit (14.0x vs 11.0x)
+- **RK3588S**: Better scaling in 32-bit (6.2x vs 5.4x)
+- Simpler instruction set creates more uniform workload distribution
+
+### Practical Recommendations
+
+**❌ Avoid 32-bit on:**
+- Modern ARM64 systems (94% performance loss is unacceptable)
+- High-performance x86_64 systems (i5-13600: 75% loss)
+- Any system with modern CPU extensions (AVX2, AVX-512)
+
+**✅ Acceptable for 32-bit:**
+- Legacy x86 hardware (Celeron 1007U: only 32% loss)
+- Budget x86 systems (Pentium N6005: 65% loss tolerable for legacy apps)
+- Systems that MUST run old 32-bit-only software
+
+**⚠️ Performance Expectations:**
+- **Best case** (old x86): 30-35% performance loss
+- **Typical case** (modern x86): 65-75% performance loss
+- **Worst case** (ARM): 93-94% performance loss
+
+### Test Commands
+
+Reproduce these results:
+
+```bash
+# Single-threaded 32-bit CPU test
+docker run --rm --platform linux/386 pingwinator/sysbench:latest
+
+# Multi-threaded 32-bit CPU test
+docker run --rm --platform linux/386 --entrypoint /usr/bin/sysbench \
+  pingwinator/sysbench:latest cpu --threads=4 --cpu-max-prime=20000 run
+
+# 32-bit memory write test
+docker run --rm --platform linux/386 --entrypoint /usr/bin/sysbench \
+  pingwinator/sysbench:latest memory --threads=4 --memory-total-size=20G run
+
+# 32-bit memory read test
+docker run --rm --platform linux/386 --entrypoint /usr/bin/sysbench \
+  pingwinator/sysbench:latest memory --threads=4 --memory-total-size=20G --memory-oper=read run
+
+# Verify 32-bit mode
+docker run --rm --platform linux/386 --entrypoint /bin/bash \
+  pingwinator/sysbench:latest -c 'getconf LONG_BIT'
+```
+
+---
+
 **License:** GPL-2.0 (matching sysbench licensing)
