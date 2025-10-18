@@ -1,4 +1,4 @@
-FROM debian:sid
+FROM debian:sid-slim
 LABEL maintainer="Vasyl Liutikov <pingwinator@gmail.com>" \
       org.opencontainers.image.title="Sysbench" \
       org.opencontainers.image.description="Multi-architecture Docker image for sysbench CPU, memory, and I/O benchmarks" \
