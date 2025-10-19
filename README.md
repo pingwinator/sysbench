@@ -9,7 +9,8 @@ Multi-architecture Docker image for running [sysbench](https://github.com/akopyt
 - `linux/amd64` (x86_64) - Intel/AMD 64-bit
 - `linux/386` (i386) - Intel/AMD 32-bit
 - `linux/arm64` (aarch64) - ARM 64-bit
-- `linux/arm/v7` (armv7) - ARM 32-bit
+- `linux/arm/v7` (armv7) - ARM 32-bit v7
+- `linux/arm/v6` (armv6) - ARM 32-bit v6
 - `linux/riscv64` - RISC-V 64-bit
 
 ## Quick Start
@@ -160,7 +161,7 @@ Latency (ms):
 docker build -t sysbench .
 
 # Multi-architecture (requires buildx)
-docker buildx build --platform linux/amd64,linux/arm64,linux/riscv64,linux/arm/v7,linux/386 \
+docker buildx build --platform linux/amd64,linux/arm64,linux/riscv64,linux/arm/v7,linux/arm/v6,linux/386 \
   -t pingwinator/sysbench:latest .
 ```
 
