@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across five different systems spanning four architectures: x86_64 (Intel 13th Gen, Pentium N6005, Celeron 1007U), ARM64 (Rockchip), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across six different systems spanning four architectures: x86_64 (Intel 13th Gen, 8th Gen, Pentium N6005, Celeron 1007U), ARM64 (Rockchip), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -15,6 +15,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS using D
 | **System 3** | Dell Wyse 3000 Thin Client | Intel Pentium Silver N6005 | x86_64 | 4/4 | 3300 MHz | L3: 4 MB | 16 GB | DDR4-2933 |
 | **System 4** | VisionFive 2 | SiFive U74-MC (JH7110) | RISC-V | 4 | 1500 MHz | L2: 2 MB | 8 GB | LPDDR4 |
 | **System 5** | ASUS VM40B | Intel Celeron 1007U (Ivy Bridge) | x86_64 | 2/2 | 1500 MHz | L3: 2 MB | 8 GB | DDR3 (?) |
+| **System 6** | Lenovo ThinkCentre M720q Tiny | Intel Core i3-8100T (Coffee Lake) | x86_64 | 4/4 | 3100 MHz | L3: 6 MB | 16 GB | DDR4 (?) |
 
 ---
 
@@ -35,6 +36,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 1 | Intel Core i5-13600 | **1,641.95** | 0.61 ms | 100% (Fastest) |
 | System 2 | Rockchip RK3588S | 979.66 | 1.02 ms | 60% |
 | System 3 | Intel Pentium N6005 | 775.24 | 1.29 ms | 47% |
+| System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
 | System 5 | Intel Celeron 1007U | 161.32 | 6.19 ms | 10% |
 
@@ -43,6 +45,7 @@ docker run --rm pingwinator/sysbench:latest
 i5-13600       ████████████████████ 1,642 evt/s (100%)
 RK3588S        ████████████         980 evt/s   (60%)
 Pentium N6005  █████████            775 evt/s   (47%)
+i3-8100T       █████                399 evt/s   (24%)
 RISC-V U74     ██                   199 evt/s   (12%)
 Celeron 1007U  ██                   161 evt/s   (10%)
 ```
@@ -98,6 +101,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 1 | Intel Core i5-13600 | 20 | 1,641.95 | **18,113.55** | 11.0x | 55% |
 | System 2 | Rockchip RK3588S | 8 | 979.66 | **5,273.76** | 5.4x | 67% |
 | System 3 | Intel Pentium N6005 | 4 | 775.24 | **3,077.02** | 4.0x | 99% |
+| System 6 | Intel Core i3-8100T | 4 | 398.65 | **1,590.39** | 4.0x | 99% |
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
 
@@ -106,6 +110,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 i5-13600       ████████████████████ 18,113 evt/s (100%)
 RK3588S        ██████               5,274 evt/s  (29%)
 Pentium N6005  ████                 3,077 evt/s  (17%)
+i3-8100T       ██                   1,590 evt/s  (9%)
 RISC-V U74     █                    790 evt/s    (4%)
 Celeron 1007U  █                    290 evt/s    (2%)
 ```
@@ -116,6 +121,7 @@ Celeron 1007U  █                    290 evt/s    (2%)
 
 #### Perfect Scaling (99%):
 - **Intel Pentium N6005**: 4.0x speedup on 4 threads = 99% efficiency
+- **Intel Core i3-8100T**: 4.0x speedup on 4 threads = 99% efficiency
 - **SiFive U74 (RISC-V)**: 4.0x speedup on 4 threads = 99% efficiency
 
 These processors show nearly linear scaling! Each core works at full capacity without losses.
@@ -137,7 +143,7 @@ Hybrid architecture (6 P-cores + 8 E-cores) and high L3 cache contention reduce 
 
 **Detailed Analysis:**
 
-**192.168.99.68 - Intel i5-13600**
+**System 1 - Intel i5-13600**
 - Threads: 20
 - Events/sec: 18,113.55
 - Avg latency: 1.10 ms
@@ -146,7 +152,7 @@ Hybrid architecture (6 P-cores + 8 E-cores) and high L3 cache contention reduce 
 
 Analysis: Large standard deviation (1,876) indicates uneven load. P-cores receive more work than E-cores. Despite 55% efficiency, absolute performance is the best.
 
-**192.168.99.29 - Rockchip RK3588S**
+**System 2 - Rockchip RK3588S**
 - Threads: 8
 - Events/sec: 5,273.76
 - Avg latency: 1.52 ms
@@ -155,7 +161,7 @@ Analysis: Large standard deviation (1,876) indicates uneven load. P-cores receiv
 
 Analysis: Huge deviation (2,972) due to big.LITTLE architecture. A76 cores (4×) do ~80% of work, A55 cores (4×) do ~20%. Still excellent absolute performance.
 
-**192.168.99.51 - Intel Pentium N6005**
+**System 3 - Intel Pentium N6005**
 - Threads: 4
 - Events/sec: 3,077.02
 - Avg latency: 1.30 ms
@@ -164,7 +170,16 @@ Analysis: Huge deviation (2,972) due to big.LITTLE architecture. A76 cores (4×)
 
 Analysis: Nearly perfect distribution (stddev = 9!). All 4 cores are identical (no P/E separation). 99% scaling efficiency.
 
-**192.168.99.202 - SiFive U74 (RISC-V)**
+**System 6 - Intel Core i3-8100T (Coffee Lake, 8th Gen)**
+- Threads: 4
+- Events/sec: 1,590.39
+- Avg latency: 2.52 ms
+- Max latency: 13.84 ms
+- Event distribution: 3,977 ± 11 events per thread
+
+Analysis: Nearly perfect distribution (stddev = 11). All 4 cores are identical (no P/E separation). 99% scaling efficiency. 8th generation Coffee Lake (2018) with mature architecture demonstrates that homogeneous cores scale better than hybrid designs.
+
+**System 4 - SiFive U74 (RISC-V)**
 - Threads: 4
 - Events/sec: 789.96
 - Avg latency: 5.06 ms
@@ -191,15 +206,17 @@ Analysis: Perfect distribution (stddev = 15). All 4 cores are completely symmetr
 1. Intel i5-13600: 18,113 evt/s
 2. Rockchip RK3588S: 5,274 evt/s
 3. Intel Pentium N6005: 3,077 evt/s
-4. SiFive U74-MC: 790 evt/s
-5. Intel Celeron 1007U: 290 evt/s
+4. Intel Core i3-8100T: 1,590 evt/s
+5. SiFive U74-MC: 790 evt/s
+6. Intel Celeron 1007U: 290 evt/s
 
 **By Scaling Efficiency:**
 1. Intel Pentium N6005: 99%
+1. Intel Core i3-8100T: 99%
 1. SiFive U74-MC: 99%
-3. Intel Celeron 1007U: 90%
-4. Rockchip RK3588S: 67%
-5. Intel i5-13600: 55%
+4. Intel Celeron 1007U: 90%
+5. Rockchip RK3588S: 67%
+6. Intel i5-13600: 55%
 
 ---
 
@@ -355,6 +372,30 @@ RISC-V U74     █                      2,385 MiB/s (2%)
 
 ---
 
+### System 6: Lenovo ThinkCentre M720q Tiny - Intel Core i3-8100T + DDR4
+
+**Specifications:**
+- Platform: Lenovo ThinkCentre M720q Tiny (Coffee Lake, 8th Gen, 2018)
+- 16 GB DDR4 memory (likely dual channel, 2×8GB)
+- 4 test threads
+- Transferred: 50 GB
+
+**Performance:**
+- Write: 7,824 MiB/s (7.6 GB/s)
+- Read: 25,138 MiB/s (24.5 GB/s)
+- Read/Write Ratio: **3.2x**
+
+**Analysis:**
+- Coffee Lake architecture (2018) with mature 14nm++ process
+- Exceptional read performance, matching the Pentium N6005 despite older generation
+- Moderate write speed, about 68% of Pentium N6005
+- Higher R/W ratio (3.2x) indicates aggressive L3 cache optimization (6MB)
+- Write completed in 6.5 sec, read in 2.0 sec
+- Tiny form factor platform with excellent memory performance
+- Ideal balance between size, power consumption, and performance
+
+---
+
 ### System 5: ASUS VM40B - Intel Celeron 1007U + DDR3
 
 **Specifications:**
@@ -386,6 +427,7 @@ RISC-V U74     █                      2,385 MiB/s (2%)
 | DDR5-4800 | i5-13600 | Desktop PC | 18.2 GB/s | 101.7 GB/s | ⭐⭐⭐⭐⭐ |
 | DDR4-2933 | Pentium N6005 | Dell Wyse 3000 | 11.3 GB/s | 24.6 GB/s | ⭐⭐⭐⭐ |
 | LPDDR4X | RK3588S | Orange Pi 5 | 11.2 GB/s | 19.0 GB/s | ⭐⭐⭐ |
+| DDR4 | i3-8100T | ThinkCentre M720q | 7.6 GB/s | 24.5 GB/s | ⭐⭐⭐⭐ |
 | DDR3 | Celeron 1007U | ASUS VM40B | 3.1 GB/s | 5.0 GB/s | ⭐⭐ |
 | LPDDR4 | SiFive U74 | VisionFive 2 | 1.7 GB/s | 2.3 GB/s | ⭐ |
 
@@ -419,22 +461,25 @@ RISC-V U74     █                      2,385 MiB/s (2%)
 1. Intel i5-13600 (DDR5): 18.2 GB/s
 2. Intel Pentium N6005 (DDR4): 11.3 GB/s
 3. Rockchip RK3588S (LPDDR): 11.2 GB/s
-4. Intel Celeron 1007U (DDR3): 3.1 GB/s
-5. SiFive U74 (DDR4?): 1.7 GB/s
+4. Intel Core i3-8100T (DDR4): 7.6 GB/s
+5. Intel Celeron 1007U (DDR3): 3.1 GB/s
+6. SiFive U74 (DDR4?): 1.7 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
 2. Intel Pentium N6005 (DDR4): 24.6 GB/s
-3. Rockchip RK3588S (LPDDR): 19.0 GB/s
-4. Intel Celeron 1007U (DDR3): 5.0 GB/s
-5. SiFive U74 (DDR4?): 2.3 GB/s
+3. Intel Core i3-8100T (DDR4): 24.5 GB/s
+4. Rockchip RK3588S (LPDDR): 19.0 GB/s
+5. Intel Celeron 1007U (DDR3): 5.0 GB/s
+6. SiFive U74 (DDR4?): 2.3 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. SiFive U74: 1.4x (simple but balanced)
 2. Intel Celeron 1007U: 1.6x (old but balanced)
 3. Rockchip RK3588S: 1.7x
 4. Intel Pentium N6005: 2.2x
-5. Intel i5-13600: 5.6x (optimized for read)
+5. Intel Core i3-8100T: 3.2x
+6. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -584,6 +629,8 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 2 | RK3588S | **32-bit** | 58.92 | 362.49 | 6.2x | **-94% / -93%** |
 | System 3 | Pentium N6005 | **64-bit** | **775.24** | **3,077.02** | 4.0x | - |
 | System 3 | Pentium N6005 | **32-bit** | 268.34 | 1,064.23 | 4.0x | **-65% / -65%** |
+| System 6 | i3-8100T | **64-bit** | **398.65** | **1,590.39** | 4.0x | - |
+| System 6 | i3-8100T | **32-bit** | 227.06 | 908.70 | 4.0x | **-43% / -43%** |
 | System 5 | Celeron 1007U | **64-bit** | **161.32** | **290.40** | 1.8x | - |
 | System 5 | Celeron 1007U | **32-bit** | 108.98 | 193.44 | 1.8x | **-32% / -33%** |
 
@@ -597,6 +644,8 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 2 | RK3588S | **32-bit** | 3,532 | 4,006 | 1.1x | **-69% / -79%** |
 | System 3 | Pentium N6005 | **64-bit** | **11,611** | **25,173** | 2.2x | - |
 | System 3 | Pentium N6005 | **32-bit** | 7,524 | 9,661 | 1.3x | **-35% / -62%** |
+| System 6 | i3-8100T | **64-bit** | **7,824** | **25,138** | 3.2x | - |
+| System 6 | i3-8100T | **32-bit** | 6,697 | 10,436 | 1.6x | **-14% / -58%** |
 | System 5 | Celeron 1007U | **64-bit** | **3,145** | **5,148** | 1.6x | - |
 | System 5 | Celeron 1007U | **32-bit** | 1,768 | 2,152 | 1.2x | **-44% / -58%** |
 
@@ -604,18 +653,20 @@ To validate multi-architecture support and measure performance impact, we tested
 
 **CPU Performance Loss (64-bit → 32-bit):**
 ```
+RK3588S (ARM)  ████████████████████▌ -94% single / -93% multi 🔥
 i5-13600       ████████████████████ -75% single / -68% multi
 Pentium N6005  ████████████████▌    -65% single / -65% multi
+i3-8100T       ███████████          -43% single / -43% multi
 Celeron 1007U  ████████             -32% single / -33% multi
-RK3588S (ARM)  ████████████████████▌ -94% single / -93% multi 🔥
 ```
 
 **Memory Read Performance Loss (64-bit → 32-bit):**
 ```
-i5-13600       ████████████████████████ -60% read
-Pentium N6005  ████████████████████▌    -62% read
-Celeron 1007U  ███████████████████      -58% read
 RK3588S (ARM)  ████████████████████████▌ -79% read 🔥
+Pentium N6005  ████████████████████▌    -62% read
+i5-13600       ████████████████████████ -60% read
+i3-8100T       ███████████████████      -58% read
+Celeron 1007U  ███████████████████      -58% read
 ```
 
 ### Key Findings
@@ -629,6 +680,7 @@ RK3588S (ARM)  █████████████████████�
 **2. Modern x86 CPUs Lose More in 32-bit Mode**
 - **i5-13600** (2023): 75% single-thread loss, 68% multi-thread loss
 - **Pentium N6005** (2021): 65% single-thread loss, 65% multi-thread loss
+- **i3-8100T** (2018): 43% single-thread loss, 43% multi-thread loss
 - **Celeron 1007U** (2012): 32% single-thread loss, 33% multi-thread loss (best!)
 
 **Why newer CPUs lose more?**
@@ -636,6 +688,7 @@ RK3588S (ARM)  █████████████████████�
 - Fewer general-purpose registers (8 vs 16)
 - Less optimized compiler paths for 32-bit
 - Hybrid architectures (P+E cores) optimized for 64-bit workloads
+- Interesting trend: 8th Gen Coffee Lake (i3-8100T) sits between budget Jasper Lake (N6005) and legacy Ivy Bridge (1007U)
 
 **3. Legacy CPUs Handle 32-bit Better**
 - **Celeron 1007U** (Ivy Bridge, 2012) shows smallest performance loss
