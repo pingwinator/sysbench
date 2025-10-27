@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across eleven different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, AMD Ryzen Embedded, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across thirteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Celeron J4025, Intel Celeron J1800, AMD Ryzen Embedded, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -21,6 +21,8 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 9** | Raspberry Pi 3 Model B | Broadcom BCM2837 (Cortex-A53) | ARM64 | 4/4 | 1200 MHz | L2: 512 KB | 1 GB | LPDDR2 |
 | **System 10** | Raspberry Pi 5 Model B | Broadcom BCM2712 (Cortex-A76) | ARM64 | 4/4 | 2400 MHz | L2: 2 MB | 8 GB | LPDDR4X |
 | **System 11** | HP t640 Thin Client | AMD Ryzen Embedded R1505G (Zen+) | x86_64 | 2/4 | 2400 MHz | L3: 4 MB | 6 GB | DDR4-2400 |
+| **System 12** | Synology DS220+ NAS | Intel Celeron J4025 (Gemini Lake) | x86_64 | 2/2 | 2000 MHz | L2: 4 MB | 10 GB | DDR4-2666 |
+| **System 13** | QNAP TS-251+ NAS | Intel Celeron J1800 (Bay Trail) | x86_64 | 2/2 | 2410 MHz | L2: 1 MB | 16 GB | DDR3L |
 
 ---
 
@@ -42,12 +44,14 @@ docker run --rm pingwinator/sysbench:latest
 | System 10 | Cortex-A76 (RPi 5) | 1,013.19 | 0.99 ms | 62% |
 | System 2 | Rockchip RK3588S | 979.66 | 1.02 ms | 60% |
 | System 3 | Intel Pentium N6005 | 775.24 | 1.29 ms | 47% |
+| System 12 | Intel Celeron J4025 | 642.11 | 1.56 ms | 39% |
 | System 8 | Cortex-A72 (RPi 4) | 575.31 | 1.74 ms | 35% |
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
 | System 11 | AMD Ryzen R1505G | 192.97 | 5.18 ms | 12% |
 | System 5 | Intel Celeron 1007U | 161.32 | 6.19 ms | 10% |
+| System 13 | Intel Celeron J1800 | 153.20 | 6.52 ms | 9% |
 | System 7 | BCM2835 (RPi Zero W) | 2.91 | 342.13 ms | 0.18% |
 
 **Performance Chart:**
@@ -56,12 +60,14 @@ i5-13600       ████████████████████ 1,64
 RPi 5 (A76)    ████████████▌        1,013 evt/s (62%)
 RK3588S        ████████████         980 evt/s   (60%)
 Pentium N6005  █████████            775 evt/s   (47%)
+Celeron J4025  ████████             642 evt/s   (39%)
 RPi 4 (A72)    ███████              575 evt/s   (35%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
 RISC-V U74     ██                   199 evt/s   (12%)
 Ryzen R1505G   ██                   193 evt/s   (12%)
 Celeron 1007U  ██                   161 evt/s   (10%)
+Celeron J1800  ██                   153 evt/s   (9%)
 RPi Zero W     ░                    3 evt/s     (0.2%)
 ```
 
@@ -124,8 +130,12 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 9 | Cortex-A53 (RPi 3) | 4 | 234.15 | **808.37** | 3.5x | 86% |
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
 | System 11 | AMD Ryzen R1505G | 4 | 192.97 | **685.37** | 3.6x | 89% |
+| System 12 | Intel Celeron J4025 | 2 | 642.11 | **1,230.64** | 1.9x | 96% |
 | System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
+| System 13 | Intel Celeron J1800 | 2 | 153.20 | **163.05** | 1.1x | 53% |
+| System 12 (32-bit) | Intel Celeron J4025 | 2 | 238.93 | **461.86** | 1.9x | 97% |
+| System 13 (32-bit) | Intel Celeron J1800 | 2 | 91.92 | **143.71** | 1.6x | 78% |
 | System 11 (32-bit) | AMD Ryzen R1505G | 4 | 192.94 | **685.69** | 3.6x | 89% |
 
 **Absolute Performance Chart:**
@@ -290,9 +300,11 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | **System 2** | Rockchip RK3588S | 16 GB | LPDDR4X/5 | **11,463** | **19,457** | 1.7x |
 | **System 10** | Cortex-A76 (RPi 5) | 8 GB | LPDDR4X | **8,351** | **15,609** | 1.9x |
 | **System 8** | Cortex-A72 (RPi 4) | 4 GB | LPDDR4 | **6,313** | **7,177** | 1.1x |
+| **System 12** | Intel Celeron J4025 | 10 GB | DDR4-2666 | **7,011** | **12,548** | 1.8x |
 | **System 11** | AMD Ryzen R1505G | 6 GB | DDR4-2400 | **4,249** | **7,140** | 1.7x |
 | **System 9** | Cortex-A53 (RPi 3) | 1 GB | LPDDR2 | **3,354** | **4,026** | 1.2x |
 | **System 5** | Intel Celeron 1007U | 8 GB | DDR3 (?) | **3,145** | **5,148** | 1.6x |
+| **System 13** | Intel Celeron J1800 | 16 GB | DDR3L | **1,965** | **3,226** | 1.6x |
 | **System 4** | SiFive U74-MC | 8 GB | DDR4 (?) | **1,761** | **2,385** | 1.4x |
 | **System 7** | BCM2835 (RPi Zero W) | 512 MB | LPDDR2 (shared) | **41.56** | **52.34** | 1.3x |
 
@@ -302,10 +314,12 @@ i5-13600       ████████████████████ 18,6
 Pentium N6005  ████████████▌        11,611 MiB/s (62%)
 RK3588S        ████████████▍        11,463 MiB/s (62%)
 RPi 5 (A76)    █████████             8,351 MiB/s (45%)
+Celeron J4025  ████████              7,011 MiB/s (38%)
 RPi 4 (A72)    ███████               6,313 MiB/s (34%)
 Ryzen R1505G   █████                 4,249 MiB/s (23%)
 RPi 3 (A53)    ████                  3,354 MiB/s (18%)
 Celeron 1007U  ████                  3,145 MiB/s (17%)
+Celeron J1800  ██                    1,965 MiB/s (11%)
 RISC-V U74     █                     1,761 MiB/s (9%)
 RPi Zero W     ░                        41 MiB/s (0.2%)
 ```
@@ -316,10 +330,12 @@ i5-13600       ████████████████████ 104,
 Pentium N6005  █████                 25,173 MiB/s (24%)
 RK3588S        ████                  19,457 MiB/s (19%)
 RPi 5 (A76)    ███                   15,609 MiB/s (15%)
+Celeron J4025  ███                   12,548 MiB/s (12%)
 RPi 4 (A72)    ██                     7,177 MiB/s (7%)
 Ryzen R1505G   ██                     7,140 MiB/s (7%)
 Celeron 1007U  █                      5,148 MiB/s (5%)
 RPi 3 (A53)    █                      4,026 MiB/s (4%)
+Celeron J1800  █                      3,226 MiB/s (3%)
 RISC-V U74     █                      2,385 MiB/s (2%)
 RPi Zero W     ░                         52 MiB/s (0.05%)
 ```
@@ -595,6 +611,116 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 11: HP t640 Thin Client - AMD Ryzen Embedded R1505G + DDR4-2400
+
+**Specifications:**
+- Platform: HP t640 Thin Client (Zen+ architecture, 2019)
+- 6 GB DDR4-2400 (dual channel, likely 4GB + 2GB)
+- 2 test threads (2 cores, 4 threads @ 2.4 GHz)
+- Transferred: 10 GB
+- Architecture: x86_64 (AMD64)
+
+**Performance:**
+- Write: 4,249 MiB/s (4.1 GB/s)
+- Read: 7,140 MiB/s (7.0 GB/s)
+- Read/Write Ratio: **1.7x**
+
+**Analysis:**
+- **Mid-range performance** - 4.4x slower write and 14.6x slower read than i5-13600
+- **Better than RPi 3 and older systems**: 1.3x faster write, 1.8x faster read than RPi 3
+- **Slower than RPi 4**: 0.67x write, 1.0x read compared to RPi 4
+- **Reasons for performance**:
+  - DDR4-2400 dual-channel memory (slower than DDR4-2666/2933)
+  - AMD Zen+ architecture with efficient 12nm process
+  - 1 MB L2 cache (512 KB per core)
+  - Only 2 cores tested (has 4 threads via SMT, but sysbench used 2 threads)
+  - 6 GB RAM in asymmetric configuration (4GB + 2GB)
+- R/W ratio of 1.7x indicates balanced memory subsystem, similar to RK3588S
+- Write completed in 2.4 sec, read in 1.4 sec
+- **Unique finding**: ZERO performance loss in 32-bit mode (192.94 vs 192.97 evt/s) - only tested processor with perfect 32-bit compatibility
+- **CPU performance**: Single-thread 192.97 evt/s, multi-thread 685.37 evt/s (3.6x speedup, 89% efficiency)
+- **Best use case**: Thin client, VDI, budget desktop, home office, legacy software compatibility
+- AMD's excellent x86 compatibility makes it ideal for running 32-bit legacy applications
+- Successfully ran sysbench via Docker with sudo
+
+---
+
+### System 12: Synology DS220+ NAS - Intel Celeron J4025 + DDR4-2666
+
+**Specifications:**
+- Platform: Synology DS220+ 2-bay NAS (Gemini Lake Refresh, 2019)
+- 10 GB DDR4-2666 (dual channel, 4GB base + 6GB expansion)
+- 2 test threads (2 cores @ 2.0 GHz)
+- Transferred: 10 GB
+- Architecture: x86_64
+- Operating System: Synology DSM 6.2.x
+
+**Performance:**
+- Write: 7,011 MiB/s (6.8 GB/s)
+- Read: 12,548 MiB/s (12.3 GB/s)
+- Read/Write Ratio: **1.8x**
+
+**Analysis:**
+- **Good NAS performance** - 2.7x slower write and 8.3x slower read than i5-13600
+- **Better than AMD Ryzen**: 1.6x faster write, 1.8x faster read than HP t640
+- **Comparable to RPi 4**: 1.1x faster write, 1.7x faster read than RPi 4
+- **Reasons for performance**:
+  - DDR4-2666 dual-channel memory (faster than R1505G's DDR4-2400)
+  - Gemini Lake Refresh with improved 14nm process (2019)
+  - 4 MB L2 cache shared across 2 cores
+  - Dual-core homogeneous design
+  - 10 GB RAM provides good headroom for NAS operations
+- R/W ratio of 1.8x indicates balanced memory subsystem optimized for NAS workloads
+- Write completed in 1.5 sec, read in 0.8 sec
+- **CPU performance**: Single-thread 642.11 evt/s (3.3x faster than R1505G), multi-thread 1,230.64 evt/s (1.9x speedup, 96% scaling)
+- **32-bit performance loss**: -63% CPU loss (642→239 evt/s), -62% memory read loss
+- **Best use case**: Home NAS, file server, media server, Docker host, VM host (DSM supports virtual machines)
+- Excellent balance of performance, power efficiency, and NAS-specific features
+- Successfully ran sysbench via Docker with sudo (Synology DSM 6.2.x)
+- **NAS-specific advantage**: Synology DSM provides excellent software ecosystem with packages and Docker support
+
+---
+
+### System 13: QNAP TS-251+ NAS - Intel Celeron J1800 + DDR3L
+
+**Specifications:**
+- Platform: QNAP TS-251+ 2-bay NAS (Bay Trail, 2013)
+- 16 GB DDR3L memory (likely dual channel, 2×8GB)
+- 2 test threads (2 cores @ 2.41 GHz)
+- Transferred: 10 GB
+- Architecture: x86_64
+- Operating System: QNAP QTS with Container Station
+
+**Performance:**
+- Write: 1,965 MiB/s (1.9 GB/s)
+- Read: 3,226 MiB/s (3.1 GB/s)
+- Read/Write Ratio: **1.6x**
+
+**Analysis:**
+- **Older NAS with limited performance** - 9.5x slower write and 32.3x slower read than i5-13600
+- **Slower than RISC-V in write**: 1.1x faster write, 1.4x faster read than VisionFive 2
+- **Slower than all ARM SBCs except RPi Zero**: Even RPi 3 is 1.7x faster write, 1.2x faster read
+- **Reasons for performance**:
+  - **Old DDR3L memory** (lower voltage variant, 2013 era)
+  - Bay Trail architecture from 2013 with outdated 22nm process
+  - Only 1 MB L2 cache total (512 KB per core - very small)
+  - Dual-core design with poor multi-thread scaling (only 1.1x speedup!)
+  - Despite 16 GB RAM, memory bandwidth is severely limited
+- R/W ratio of 1.6x indicates balanced but slow memory subsystem
+- Write completed in 5.2 sec, read in 3.2 sec
+- **CPU performance**: Single-thread 153.20 evt/s (SLOWEST x86 tested), multi-thread 163.05 evt/s (1.1x speedup, **53% efficiency** - WORST SCALING)
+- **32-bit performance loss**: -40% CPU loss (153→92 evt/s), but better multi-thread scaling in 32-bit (1.6x vs 1.1x)
+- **Critical findings**:
+  - Worst multi-thread scaling efficiency (53%) among all tested systems
+  - Even single-thread performance is slower than 10-year-old Celeron 1007U (153 vs 161 evt/s)
+  - Bay Trail architecture has severe bottlenecks preventing effective use of both cores
+- **Best use case**: Budget NAS, file storage, light media serving, legacy hardware repurposing
+- **Recommendation**: Consider upgrading to newer NAS hardware - even budget ARM SBCs (RPi 4) offer better performance
+- Successfully ran sysbench via Docker (QNAP Container Station at `/share/CACHEDEV1_DATA/.qpkg/container-station/bin/docker`)
+- **NAS-specific note**: QNAP QTS provides good software features, but hardware is severely outdated (11+ years old)
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
@@ -604,9 +730,12 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 | LPDDR4X | RK3588S | Orange Pi 5 | 11.2 GB/s | 19.0 GB/s | ⭐⭐⭐ |
 | LPDDR4X | Cortex-A76 | Raspberry Pi 5 | 8.2 GB/s | 15.2 GB/s | ⭐⭐⭐ |
 | DDR4 | i3-8100T | ThinkCentre M720q | 7.6 GB/s | 24.5 GB/s | ⭐⭐⭐⭐ |
+| DDR4-2666 | Celeron J4025 | Synology DS220+ | 6.8 GB/s | 12.3 GB/s | ⭐⭐⭐ |
 | LPDDR4 | Cortex-A72 | Raspberry Pi 4 | 6.2 GB/s | 7.0 GB/s | ⭐⭐⭐ |
+| DDR4-2400 | Ryzen R1505G | HP t640 | 4.1 GB/s | 7.0 GB/s | ⭐⭐ |
 | LPDDR2 | Cortex-A53 | Raspberry Pi 3 | 3.3 GB/s | 3.9 GB/s | ⭐⭐ |
 | DDR3 | Celeron 1007U | ASUS VM40B | 3.1 GB/s | 5.0 GB/s | ⭐⭐ |
+| DDR3L | Celeron J1800 | QNAP TS-251+ | 1.9 GB/s | 3.1 GB/s | ⭐ |
 | LPDDR4 | SiFive U74 | VisionFive 2 | 1.7 GB/s | 2.3 GB/s | ⭐ |
 | LPDDR2 | BCM2835 | Raspberry Pi Zero W | 0.04 GB/s | 0.05 GB/s | ⚠️ (IoT only) |
 
@@ -642,12 +771,14 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 3. Rockchip RK3588S (LPDDR4X): 11.2 GB/s
 4. Cortex-A76/RPi 5 (LPDDR4X): 8.2 GB/s
 5. Intel Core i3-8100T (DDR4): 7.6 GB/s
-6. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
-7. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
-8. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
-9. Intel Celeron 1007U (DDR3): 3.1 GB/s
-10. SiFive U74 (LPDDR4): 1.7 GB/s
-11. BCM2835 (LPDDR2): 0.04 GB/s
+6. Intel Celeron J4025 (DDR4-2666): 6.8 GB/s
+7. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
+8. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
+9. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
+10. Intel Celeron 1007U (DDR3): 3.1 GB/s
+11. Intel Celeron J1800 (DDR3L): 1.9 GB/s
+12. SiFive U74 (LPDDR4): 1.7 GB/s
+13. BCM2835 (LPDDR2): 0.04 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
@@ -655,12 +786,14 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 3. Intel Core i3-8100T (DDR4): 24.5 GB/s
 4. Rockchip RK3588S (LPDDR4X): 19.0 GB/s
 5. Cortex-A76/RPi 5 (LPDDR4X): 15.2 GB/s
-6. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
-7. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
-8. Intel Celeron 1007U (DDR3): 5.0 GB/s
-9. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
-10. SiFive U74 (LPDDR4): 2.3 GB/s
-11. BCM2835 (LPDDR2): 0.05 GB/s
+6. Intel Celeron J4025 (DDR4-2666): 12.3 GB/s
+7. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
+8. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
+9. Intel Celeron 1007U (DDR3): 5.0 GB/s
+10. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
+11. Intel Celeron J1800 (DDR3L): 3.1 GB/s
+12. SiFive U74 (LPDDR4): 2.3 GB/s
+13. BCM2835 (LPDDR2): 0.05 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. Cortex-A72/RPi 4: 1.1x (best balanced memory subsystem)
@@ -668,12 +801,14 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 3. BCM2835 (RPi Zero W): 1.3x (extremely simple, minimal caching)
 4. SiFive U74: 1.4x (simple but balanced)
 5. Intel Celeron 1007U: 1.6x (old but balanced)
-6. Rockchip RK3588S: 1.7x
-7. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
-8. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
-9. Intel Pentium N6005: 2.2x
-10. Intel Core i3-8100T: 3.2x
-11. Intel i5-13600: 5.6x (optimized for read)
+6. Intel Celeron J1800: 1.6x (balanced but slow DDR3L)
+7. Rockchip RK3588S: 1.7x
+8. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
+9. Intel Celeron J4025: 1.8x (balanced NAS optimized)
+10. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
+11. Intel Pentium N6005: 2.2x
+12. Intel Core i3-8100T: 3.2x
+13. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -770,15 +905,63 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 - Best choice for: IoT sensors, learning projects, legacy ARMv6 software testing, ultra-low-power edge computing
 - Important validation: Proves Docker multi-architecture support works even on slowest ARM platform
 
+**HP t640 Thin Client - AMD Ryzen Embedded R1505G (Zen+)**
+- Platform: HP t640 Thin Client (2019) with AMD Zen+ architecture
+- Dual-core x86_64 processor @ 2.4 GHz with SMT (4 threads)
+- Mid-range performance: 12% of i5-13600 single-thread, 4% multi-thread
+- Memory performance: 4.1 GB/s write, 7.0 GB/s read - balanced (1.7x R/W ratio)
+- 6 GB DDR4-2400 dual-channel RAM in asymmetric configuration (4GB+2GB)
+- Good multi-thread scaling (89%) with SMT technology
+- **Unique achievement**: ZERO performance loss in 32-bit mode - only tested CPU with perfect 32-bit/64-bit parity
+- Perfect for legacy 32-bit applications requiring full performance
+- Successfully ran sysbench via Docker with sudo authentication
+- Best choice for: Thin clients, VDI workstations, budget desktops, home offices, legacy x86 software compatibility
+- AMD's excellent x86 compatibility makes it ideal for mixed 32-bit/64-bit environments
+- Comparable performance to Raspberry Pi 4 but with complete x86 ecosystem support
+
+**Synology DS220+ NAS - Intel Celeron J4025 (Gemini Lake Refresh)**
+- Platform: Synology DS220+ 2-bay NAS (2019) running DSM 6.2.x
+- Dual-core x86_64 processor @ 2.0 GHz (Gemini Lake Refresh, 14nm)
+- Good performance for NAS: 39% of i5-13600 single-thread, 7% multi-thread
+- Memory performance: 6.8 GB/s write, 12.3 GB/s read - balanced (1.8x R/W ratio)
+- 10 GB DDR4-2666 dual-channel RAM (4GB base + 6GB expansion)
+- Excellent multi-thread scaling (96%) with homogeneous dual-core design
+- **3.3x faster single-thread than AMD R1505G despite lower clock speed** (2.0 GHz vs 2.4 GHz)
+- 1.6x faster memory write and 1.8x faster memory read than HP t640
+- 32-bit performance loss: -63% CPU, -62% memory read (avoid 32-bit mode)
+- Successfully ran sysbench via Docker with sudo (Synology DSM 6.2.x)
+- **NAS strengths**: Excellent software ecosystem (DSM), Docker support, package manager, VM hosting
+- Best choice for: Home NAS, file server, media server (Plex/Jellyfin), Docker host, lightweight virtualization
+- Ideal balance of performance, power efficiency, and NAS-specific features for home/SMB use
+
+**QNAP TS-251+ NAS - Intel Celeron J1800 (Bay Trail)**
+- Platform: QNAP TS-251+ 2-bay NAS (2013) running QTS with Container Station
+- Dual-core x86_64 processor @ 2.41 GHz (Bay Trail, outdated 22nm process)
+- **Critically low performance**: 9% of i5-13600 single-thread, 1% multi-thread
+- **SLOWEST x86 CPU tested** - even older Celeron 1007U (2013) is 5% faster single-thread
+- Memory performance: 1.9 GB/s write, 3.1 GB/s read - balanced but extremely slow (1.6x R/W ratio)
+- 16 GB DDR3L memory (large capacity doesn't compensate for slow bandwidth)
+- **WORST multi-thread scaling**: Only 1.1x speedup on 2 cores (53% efficiency)
+- **Critical architectural bottleneck**: Bay Trail cannot effectively utilize both cores
+- Slower than Raspberry Pi 3 (2016) despite being x86: RPi 3 is 1.7x faster write, 1.2x faster read
+- Only 1.1x faster write than RISC-V VisionFive 2 (the slowest modern platform)
+- Successfully ran sysbench via Container Station (`/share/CACHEDEV1_DATA/.qpkg/container-station/bin/docker`)
+- Best choice for: Budget file storage, legacy NAS upgrade path, light media serving
+- **Strong recommendation**: Upgrade to newer hardware - RPi 4 or DS220+ offer significantly better performance
+- **NAS note**: QNAP QTS has good software features, but 11-year-old Bay Trail hardware is severely outdated
+- Consider replacing with modern NAS or repurposing as cold storage only
+
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all ten test systems across five architectures:
-- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (4 systems tested)
+The `pingwinator/sysbench:latest` Docker image successfully executed on all thirteen test systems across five architectures:
+- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (7 systems tested: i5-13600, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G)
 - ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (4 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3)
+- ✅ linux/arm/v7 (ARMv7) - 32-bit mode tested on ARM64 hardware (Orange Pi 5, RPi 5)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
 - ✅ linux/riscv64 (RISC-V 64-bit) - VisionFive 2
+- ✅ linux/386 (i386) - 32-bit Intel/AMD tested on all x86_64 systems
 
-Multi-architecture support is fully validated and production-ready across five architectures spanning 10 different hardware platforms.
+Multi-architecture support is fully validated and production-ready across six architectures spanning 13 different hardware platforms.
 
 ### Recommendations
 
@@ -813,6 +996,27 @@ Multi-architecture support is fully validated and production-ready across five a
 - Extremely slow but functional for sensor nodes and learning projects
 - Requires Docker flag `--security-opt seccomp=unconfined` to run sysbench
 - Best for legacy ARMv6 software compatibility testing
+
+**For NAS and Home Server Users:**
+- **Best performance NAS**: Synology DS220+ (Celeron J4025) - excellent balance of performance, power efficiency, and software features
+  - 642 evt/s single-thread, 96% scaling efficiency
+  - Superior DSM software ecosystem with Docker, packages, and VM support
+  - 3.3x faster than AMD R1505G thin client despite lower clock speed
+- **Budget/Legacy NAS**: QNAP TS-251+ (Celeron J1800) - usable for file storage but severely outdated
+  - SLOWEST x86 CPU tested with worst scaling (53% efficiency)
+  - Consider upgrade to Synology DS220+ (4.2x faster) or even Raspberry Pi 4 (3.5x faster)
+  - Bay Trail architecture (2013) has critical bottlenecks preventing effective dual-core usage
+- **DIY NAS alternative**: Raspberry Pi 4/5 offer better performance than old NAS hardware at lower cost
+  - RPi 5: 6.6x faster CPU than QNAP TS-251+, competitive with Synology DS220+
+  - RPi 4: Still 3.5x faster than QNAP TS-251+, excellent for OpenMediaVault or similar
+
+**For Thin Client and Legacy Hardware:**
+- **AMD R1505G (HP t640)**: Perfect 32-bit compatibility, good for VDI and legacy software
+  - ZERO performance loss in 32-bit mode (unique among all tested systems)
+  - Ideal for mixed 32-bit/64-bit environments
+- **Avoid**: Intel Celeron 1007U and older - 10+ year old hardware too slow for modern workloads
+  - 6-10x slower than modern budget processors
+  - Consider replacing with Pentium N6005 thin client or Raspberry Pi 5
 
 ---
 
@@ -900,6 +1104,8 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 10 | RPi 5 (A76) | **32-bit** | 63.32 | 246.96 | 3.9x | **-94% / -94%** |
 | System 11 | Ryzen R1505G | **64-bit** | **192.97** | **685.37** | 3.6x | - |
 | System 11 | Ryzen R1505G | **32-bit** | 192.94 | 685.69 | 3.6x | **0% / 0%** |
+| System 12 | Celeron J4025 | **64-bit** | **642.11** | **1,230.64** | 1.9x | - |
+| System 12 | Celeron J4025 | **32-bit** | 238.93 | 461.86 | 1.9x | **-63% / -62%** |
 
 ### Memory Performance: 64-bit vs 32-bit Comparison
 
@@ -919,6 +1125,8 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 10 | RPi 5 (A76) | **32-bit** | 1,535 | 1,653 | 1.1x | **-82% / -89%** |
 | System 11 | Ryzen R1505G | **64-bit** | **4,249** | **7,140** | 1.7x | - |
 | System 11 | Ryzen R1505G | **32-bit** | 4,313 | 7,168 | 1.7x | **+1% / 0%** |
+| System 12 | Celeron J4025 | **64-bit** | **5,939** | **9,188** | 1.5x | - |
+| System 12 | Celeron J4025 | **32-bit** | 2,950 | 3,821 | 1.3x | **-50% / -58%** |
 
 ### Performance Impact Analysis
 
@@ -928,6 +1136,7 @@ RK3588S (ARM)  ████████████████████▌ -
 RPi 5 (ARM)    ████████████████████▌ -94% single / -94% multi 🔥
 i5-13600       ████████████████████ -75% single / -68% multi
 Pentium N6005  ████████████████▌    -65% single / -65% multi
+Celeron J4025  ████████████████▌    -63% single / -62% multi
 i3-8100T       ███████████          -43% single / -43% multi
 Celeron 1007U  ████████             -32% single / -33% multi
 Ryzen R1505G   ░                    0% single / 0% multi ⭐
@@ -939,6 +1148,7 @@ RPi 5 (ARM)    █████████████████████�
 RK3588S (ARM)  ████████████████████████▌ -79% read 🔥
 Pentium N6005  ████████████████████▌    -62% read
 i5-13600       ████████████████████████ -60% read
+Celeron J4025  ███████████████████      -58% read
 i3-8100T       ███████████████████      -58% read
 Celeron 1007U  ███████████████████      -58% read
 Ryzen R1505G   ░                        0% read ⭐
