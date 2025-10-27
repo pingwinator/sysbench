@@ -1,10 +1,10 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across sixteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Pentium N6005, Intel Celeron 1007U/J4025/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across seventeen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Pentium N6005, Intel Celeron 1007U/J4025/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1/M1 Pro, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
-All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 15.0.1 (Apple M1), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
+All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 15.0.1 (Apple M1), macOS 26.0.1 (Apple M1 Pro), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
 
 ### System Specifications
 
@@ -26,6 +26,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 13** | QNAP TS-251+ NAS | Intel Celeron J1800 (Bay Trail) | x86_64 | 2/2 | 2410 MHz | L2: 1 MB | 16 GB | DDR3L |
 | **System 14** | Fustro S900/S920 | AMD G-T56N (Ontario/Zacate) | x86_64 | 2/2 | 1650 MHz | L2: 1 MB | 3.4 GB | DDR3 (?) |
 | **System 16** | Lenovo ThinkPad T480 | Intel Core i5-8250U (Kaby Lake R) | x86_64 | 4/8 | 3400 MHz | L3: 6 MB | 16 GB | DDR4 (?) |
+| **System 17** | MacBook Pro 14" (2021) | Apple M1 Pro | ARM64 | 10 (8×P+2×E) | 3200 MHz | L2: 24 MB | 16 GB | LPDDR5 (Unified) |
 
 ---
 
@@ -44,6 +45,7 @@ docker run --rm pingwinator/sysbench:latest
 | System | Processor | Events/sec | Avg Latency | Relative Performance |
 |--------|-----------|------------|-------------|---------------------|
 | System 15 | Apple M1 | **4,046.19** | 0.25 ms | 246% (Fastest ARM) |
+| System 17 | Apple M1 Pro | **3,973.06** | 0.25 ms | 242% |
 | System 1 | Intel Core i5-13600 | **1,641.95** | 0.61 ms | 100% (Fastest x86) |
 | System 10 | Cortex-A76 (RPi 5) | 1,013.19 | 0.99 ms | 62% |
 | System 2 | Rockchip RK3588S | 979.66 | 1.02 ms | 60% |
@@ -63,6 +65,7 @@ docker run --rm pingwinator/sysbench:latest
 **Performance Chart:**
 ```
 Apple M1       ████████████████████████████████████████████████ 4,046 evt/s (246% - NEW CHAMPION!)
+Apple M1 Pro   ███████████████████████████████████████████████▌ 3,973 evt/s (242%)
 i5-13600       ████████████████████ 1,642 evt/s (100%)
 RPi 5 (A76)    ████████████▌        1,013 evt/s (62%)
 RK3588S        ████████████         980 evt/s   (60%)
@@ -917,6 +920,62 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 17: MacBook Pro 14" (2021) - Apple M1 Pro + LPDDR5 Unified Memory
+
+**Specifications:**
+- Platform: MacBook Pro 14" (2021)
+- 16 GB LPDDR5 Unified Memory (shared CPU/GPU, 256-bit bus)
+- 10 cores (8×Firestorm P-cores @ 3.2 GHz + 2×Icestorm E-cores @ 2.0 GHz)
+- Architecture: ARM64 (aarch64)
+- Operating System: macOS 26.0.1
+- Container Platform: macOS native container support (`/usr/local/bin/container`)
+
+**CPU Performance:**
+- **Single-thread (ARM64): 3,973.06 evt/s** - 242% of i5-13600, 98% of base M1
+- **Average latency: 0.25 ms** - Same ultra-low latency as base M1
+- **Single-thread (x86_64 via Rosetta 2): 2,928.00 evt/s** - 178% of i5-13600
+- **Rosetta 2 latency: 0.34 ms** - 36% higher than native ARM64
+- **Emulation performance loss: 26%** - Rosetta 2 remains remarkably efficient
+
+**Analysis:**
+
+**CPU Performance:**
+- **Extremely close to base M1** - Only 1.8% slower (3,973 vs 4,046 evt/s)
+- **Still dominates Intel i5-13600** - 2.42x faster in single-thread
+- **Rosetta 2 beats native x86** - x86_64 emulation (2,928 evt/s) is 78% faster than i5-13600's native performance
+- **Consistency across M1 family** - Performance cores (Firestorm) deliver identical per-core performance
+- **10-core design**: 8×P-cores + 2×E-cores (vs base M1's 4×P + 4×E) optimized for sustained performance
+
+**Reasons for Outstanding Performance:**
+- **Same Firestorm P-cores as base M1**: 5nm process, 3.2 GHz, identical microarchitecture
+- **More performance cores**: 8×P-cores vs base M1's 4×P-cores (2x performance cores)
+- **Enhanced L2 cache**: 24 MB total (vs 12 MB on base M1) - 2x cache for better sustained performance
+- **LPDDR5 Unified Memory**: Faster than base M1's LPDDR4X, 256-bit bus (vs 128-bit), up to 200 GB/s theoretical bandwidth
+- **Pro-oriented thermal design**: 14" chassis with active cooling for sustained high performance
+- **macOS 26.0.1**: Latest macOS with optimized native container support
+
+**Key Findings:**
+1. **M1 Pro matches base M1 in single-thread** - 98% performance demonstrates consistency
+2. **Rosetta 2 performance is exceptional** - x86_64 emulation still beats native Intel x86
+3. **8×P-core design for professionals** - More performance cores for sustained multi-threaded workloads
+4. **macOS native containers work flawlessly** - Full architecture support (arm64, amd64)
+5. **Best mobile development workstation** - Combines portability with desktop-class performance
+
+**Comparison with Base M1 (Mac mini):**
+- **Single-thread performance**: 98% (very close)
+- **Performance core count**: 2x (8 vs 4 P-cores)
+- **Total core count**: 1.25x (10 vs 8 cores)
+- **L2 cache**: 2x (24 MB vs 12 MB)
+- **Memory**: LPDDR5 vs LPDDR4X (faster standard)
+- **Form factor**: Portable laptop vs desktop mini
+- **Use case**: Mobile professionals vs stationary developers
+
+**Best use case**: Mobile development workstation, on-the-go content creation, Xcode builds, iOS/macOS development, Docker development, machine learning, video editing
+
+**Verdict**: MacBook Pro 14" with M1 Pro delivers 98% of the base M1's exceptional single-thread performance while adding more performance cores and enhanced memory for sustained professional workloads. The combination of portability, outstanding performance, and excellent Rosetta 2 emulation makes it the ultimate mobile development platform.
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
@@ -1186,9 +1245,9 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all sixteen test systems across five architectures:
+The `pingwinator/sysbench:latest` Docker image successfully executed on all seventeen test systems across five architectures:
 - ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (9 systems tested: i5-13600, i5-8250U, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G, AMD G-T56N)
-- ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (5 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3, Apple M1 Mac mini)
+- ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (6 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3, Apple M1 Mac mini, Apple M1 Pro MacBook Pro 14")
 - ✅ linux/arm/v7 (ARMv7) - 32-bit mode tested on ARM64 hardware (Orange Pi 5, RPi 5)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
 - ✅ linux/riscv64 (RISC-V 64-bit) - VisionFive 2
