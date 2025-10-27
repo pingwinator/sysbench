@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across thirteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Celeron J4025, Intel Celeron J1800, AMD Ryzen Embedded, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across fourteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Celeron J4025, Intel Celeron J1800, AMD Ryzen Embedded, AMD G-T56N, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -23,6 +23,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 11** | HP t640 Thin Client | AMD Ryzen Embedded R1505G (Zen+) | x86_64 | 2/4 | 2400 MHz | L3: 4 MB | 6 GB | DDR4-2400 |
 | **System 12** | Synology DS220+ NAS | Intel Celeron J4025 (Gemini Lake) | x86_64 | 2/2 | 2000 MHz | L2: 4 MB | 10 GB | DDR4-2666 |
 | **System 13** | QNAP TS-251+ NAS | Intel Celeron J1800 (Bay Trail) | x86_64 | 2/2 | 2410 MHz | L2: 1 MB | 16 GB | DDR3L |
+| **System 14** | Fustro S900/S920 | AMD G-T56N (Ontario/Zacate) | x86_64 | 2/2 | 1650 MHz | L2: 1 MB | 3.4 GB | DDR3 (?) |
 
 ---
 
@@ -52,6 +53,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 11 | AMD Ryzen R1505G | 192.97 | 5.18 ms | 12% |
 | System 5 | Intel Celeron 1007U | 161.32 | 6.19 ms | 10% |
 | System 13 | Intel Celeron J1800 | 153.20 | 6.52 ms | 9% |
+| System 14 | AMD G-T56N | 63.01 | 15.86 ms | 4% |
 | System 7 | BCM2835 (RPi Zero W) | 2.91 | 342.13 ms | 0.18% |
 
 **Performance Chart:**
@@ -68,6 +70,7 @@ RISC-V U74     ██                   199 evt/s   (12%)
 Ryzen R1505G   ██                   193 evt/s   (12%)
 Celeron 1007U  ██                   161 evt/s   (10%)
 Celeron J1800  ██                   153 evt/s   (9%)
+AMD G-T56N     █                    63 evt/s    (4%)
 RPi Zero W     ░                    3 evt/s     (0.2%)
 ```
 
@@ -134,6 +137,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
 | System 13 | Intel Celeron J1800 | 2 | 153.20 | **163.05** | 1.1x | 53% |
+| System 14 | AMD G-T56N | 2 | 63.01 | **121.86** | 1.9x | 97% |
 | System 12 (32-bit) | Intel Celeron J4025 | 2 | 238.93 | **461.86** | 1.9x | 97% |
 | System 13 (32-bit) | Intel Celeron J1800 | 2 | 91.92 | **143.71** | 1.6x | 78% |
 | System 11 (32-bit) | AMD Ryzen R1505G | 4 | 192.94 | **685.69** | 3.6x | 89% |
@@ -306,6 +310,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | **System 5** | Intel Celeron 1007U | 8 GB | DDR3 (?) | **3,145** | **5,148** | 1.6x |
 | **System 13** | Intel Celeron J1800 | 16 GB | DDR3L | **1,965** | **3,226** | 1.6x |
 | **System 4** | SiFive U74-MC | 8 GB | DDR4 (?) | **1,761** | **2,385** | 1.4x |
+| **System 14** | AMD G-T56N | 3.4 GB | DDR3 (?) | **1,187** | **2,939** | 2.5x |
 | **System 7** | BCM2835 (RPi Zero W) | 512 MB | LPDDR2 (shared) | **41.56** | **52.34** | 1.3x |
 
 **Write Performance Chart:**
@@ -321,6 +326,7 @@ RPi 3 (A53)    ████                  3,354 MiB/s (18%)
 Celeron 1007U  ████                  3,145 MiB/s (17%)
 Celeron J1800  ██                    1,965 MiB/s (11%)
 RISC-V U74     █                     1,761 MiB/s (9%)
+AMD G-T56N     █                     1,187 MiB/s (6%)
 RPi Zero W     ░                        41 MiB/s (0.2%)
 ```
 
@@ -336,6 +342,7 @@ Ryzen R1505G   ██                     7,140 MiB/s (7%)
 Celeron 1007U  █                      5,148 MiB/s (5%)
 RPi 3 (A53)    █                      4,026 MiB/s (4%)
 Celeron J1800  █                      3,226 MiB/s (3%)
+AMD G-T56N     █                      2,939 MiB/s (3%)
 RISC-V U74     █                      2,385 MiB/s (2%)
 RPi Zero W     ░                         52 MiB/s (0.05%)
 ```
@@ -721,6 +728,49 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 14: Fustro S900/S920 - AMD G-T56N + DDR3
+
+**Specifications:**
+- Platform: Fustro S900/S920 fanless mini PC (Ontario/Zacate APU, 2011)
+- 3.4 GB DDR3 memory
+- 2 test threads (2 cores @ 0.825-1.65 GHz, dynamic frequency)
+- Transferred: 10 GB
+- Architecture: x86_64 (AMD64)
+- Operating System: Ubuntu 24.04.3 LTS
+
+**Performance:**
+- Write: 1,187 MiB/s (1.16 GB/s)
+- Read: 2,939 MiB/s (2.87 GB/s)
+- Read/Write Ratio: **2.5x**
+
+**Analysis:**
+- **SLOWEST x86_64 system tested** - 15.7x slower write and 35.4x slower read than i5-13600
+- **Slower than RISC-V**: Only 0.67x write speed of VisionFive 2 (1.19 vs 1.76 GB/s)
+- **Slower than all ARM except RPi Zero**: RPi 3 is 2.8x faster write, 1.4x faster read
+- **CPU performance**: Single-thread 63.01 evt/s (SLOWEST x86_64, even slower than QNAP by 2.4x), multi-thread 121.86 evt/s (1.9x speedup, **97% efficiency**)
+- **Reasons for poor performance**:
+  - **AMD Bobcat microarchitecture from 2011** - first generation AMD APU (Ontario/Zacate)
+  - Very low clock speed: 825 MHz min, 1650 MHz max (dynamic scaling)
+  - Only 1 MB L2 cache total (512 KB per core - tiny)
+  - DDR3 memory with very limited bandwidth
+  - Low-power design optimized for power efficiency, not performance (18W TDP)
+  - Integrated Radeon HD 6250 GPU shares memory bandwidth
+- R/W ratio of 2.5x indicates moderate caching despite low performance
+- Write completed in 8.6 sec, read in 3.5 sec
+- **32-bit performance**: -8.4% CPU loss (63→58 evt/s), -51% memory read loss (2.9→1.4 GB/s)
+- **Excellent multi-thread scaling**: 97% efficiency (1.9x on 2 cores) despite terrible absolute performance
+- **Critical findings**:
+  - SLOWEST x86_64 CPU ever tested - 26x slower than i5-13600
+  - Even slower than 14-year-old RISC-V development board in memory write
+  - First-generation AMD APU (2011) shows how far AMD has come with Zen architectures
+  - Proves that Bobcat microarchitecture was severely limited even when new
+- **Best use case**: Ultra-low-power applications, fanless systems, legacy x86 compatibility testing, e-waste reduction
+- **Recommendation**: Replace immediately with ANY modern hardware - even RPi 3 (2016) is significantly faster
+- Successfully ran sysbench via Docker with sudo
+- **Historical note**: AMD G-T56N represents AMD's first APU generation, predating Ryzen by 6 years. Modern AMD Ryzen R1505G (System 11) is 3.1x faster in single-thread performance.
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
@@ -737,6 +787,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 | DDR3 | Celeron 1007U | ASUS VM40B | 3.1 GB/s | 5.0 GB/s | ⭐⭐ |
 | DDR3L | Celeron J1800 | QNAP TS-251+ | 1.9 GB/s | 3.1 GB/s | ⭐ |
 | LPDDR4 | SiFive U74 | VisionFive 2 | 1.7 GB/s | 2.3 GB/s | ⭐ |
+| DDR3 | AMD G-T56N | Fustro S900/S920 | 1.2 GB/s | 2.9 GB/s | ⭐ |
 | LPDDR2 | BCM2835 | Raspberry Pi Zero W | 0.04 GB/s | 0.05 GB/s | ⚠️ (IoT only) |
 
 ---
@@ -778,7 +829,8 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 10. Intel Celeron 1007U (DDR3): 3.1 GB/s
 11. Intel Celeron J1800 (DDR3L): 1.9 GB/s
 12. SiFive U74 (LPDDR4): 1.7 GB/s
-13. BCM2835 (LPDDR2): 0.04 GB/s
+13. AMD G-T56N (DDR3): 1.2 GB/s
+14. BCM2835 (LPDDR2): 0.04 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
@@ -792,8 +844,9 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 9. Intel Celeron 1007U (DDR3): 5.0 GB/s
 10. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
 11. Intel Celeron J1800 (DDR3L): 3.1 GB/s
-12. SiFive U74 (LPDDR4): 2.3 GB/s
-13. BCM2835 (LPDDR2): 0.05 GB/s
+12. AMD G-T56N (DDR3): 2.9 GB/s
+13. SiFive U74 (LPDDR4): 2.3 GB/s
+14. BCM2835 (LPDDR2): 0.05 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. Cortex-A72/RPi 4: 1.1x (best balanced memory subsystem)
@@ -807,8 +860,9 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 9. Intel Celeron J4025: 1.8x (balanced NAS optimized)
 10. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
 11. Intel Pentium N6005: 2.2x
-12. Intel Core i3-8100T: 3.2x
-13. Intel i5-13600: 5.6x (optimized for read)
+12. AMD G-T56N: 2.5x (low-power APU with moderate caching)
+13. Intel Core i3-8100T: 3.2x
+14. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -953,15 +1007,15 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all thirteen test systems across five architectures:
-- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (7 systems tested: i5-13600, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G)
+The `pingwinator/sysbench:latest` Docker image successfully executed on all fourteen test systems across five architectures:
+- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (8 systems tested: i5-13600, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G, AMD G-T56N)
 - ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (4 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3)
 - ✅ linux/arm/v7 (ARMv7) - 32-bit mode tested on ARM64 hardware (Orange Pi 5, RPi 5)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
 - ✅ linux/riscv64 (RISC-V 64-bit) - VisionFive 2
 - ✅ linux/386 (i386) - 32-bit Intel/AMD tested on all x86_64 systems
 
-Multi-architecture support is fully validated and production-ready across six architectures spanning 13 different hardware platforms.
+Multi-architecture support is fully validated and production-ready across six architectures spanning 14 different hardware platforms.
 
 ### Recommendations
 
