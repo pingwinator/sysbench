@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across nine different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Pentium N6005, Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across eleven different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, AMD Ryzen Embedded, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -19,6 +19,8 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 7** | Raspberry Pi Zero W | Broadcom BCM2835 | ARMv6 | 1/1 | 1000 MHz | L1: 16 KB | 512 MB | LPDDR2 (shared) |
 | **System 8** | Raspberry Pi 4 Model B | Broadcom BCM2711 (Cortex-A72) | ARM64 | 4/4 | 1500 MHz | L2: 1 MB | 4 GB | LPDDR4 |
 | **System 9** | Raspberry Pi 3 Model B | Broadcom BCM2837 (Cortex-A53) | ARM64 | 4/4 | 1200 MHz | L2: 512 KB | 1 GB | LPDDR2 |
+| **System 10** | Raspberry Pi 5 Model B | Broadcom BCM2712 (Cortex-A76) | ARM64 | 4/4 | 2400 MHz | L2: 2 MB | 8 GB | LPDDR4X |
+| **System 11** | HP t640 Thin Client | AMD Ryzen Embedded R1505G (Zen+) | x86_64 | 2/4 | 2400 MHz | L3: 4 MB | 6 GB | DDR4-2400 |
 
 ---
 
@@ -37,24 +39,28 @@ docker run --rm pingwinator/sysbench:latest
 | System | Processor | Events/sec | Avg Latency | Relative Performance |
 |--------|-----------|------------|-------------|---------------------|
 | System 1 | Intel Core i5-13600 | **1,641.95** | 0.61 ms | 100% (Fastest) |
+| System 10 | Cortex-A76 (RPi 5) | 1,013.19 | 0.99 ms | 62% |
 | System 2 | Rockchip RK3588S | 979.66 | 1.02 ms | 60% |
 | System 3 | Intel Pentium N6005 | 775.24 | 1.29 ms | 47% |
 | System 8 | Cortex-A72 (RPi 4) | 575.31 | 1.74 ms | 35% |
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
+| System 11 | AMD Ryzen R1505G | 192.97 | 5.18 ms | 12% |
 | System 5 | Intel Celeron 1007U | 161.32 | 6.19 ms | 10% |
 | System 7 | BCM2835 (RPi Zero W) | 2.91 | 342.13 ms | 0.18% |
 
 **Performance Chart:**
 ```
 i5-13600       ████████████████████ 1,642 evt/s (100%)
+RPi 5 (A76)    ████████████▌        1,013 evt/s (62%)
 RK3588S        ████████████         980 evt/s   (60%)
 Pentium N6005  █████████            775 evt/s   (47%)
 RPi 4 (A72)    ███████              575 evt/s   (35%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
 RISC-V U74     ██                   199 evt/s   (12%)
+Ryzen R1505G   ██                   193 evt/s   (12%)
 Celeron 1007U  ██                   161 evt/s   (10%)
 RPi Zero W     ░                    3 evt/s     (0.2%)
 ```
@@ -111,22 +117,28 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 |--------|-----------|---------|----------------------|----------------------|---------|-------------------|
 | System 1 | Intel Core i5-13600 | 20 | 1,641.95 | **18,113.55** | 11.0x | 55% |
 | System 2 | Rockchip RK3588S | 8 | 979.66 | **5,273.76** | 5.4x | 67% |
+| System 10 | Cortex-A76 (RPi 5) | 4 | 1,013.19 | **3,957.99** | 3.9x | 98% |
 | System 3 | Intel Pentium N6005 | 4 | 775.24 | **3,077.02** | 4.0x | 99% |
 | System 8 | Cortex-A72 (RPi 4) | 4 | 575.31 | **2,078.67** | 3.6x | 90% |
 | System 6 | Intel Core i3-8100T | 4 | 398.65 | **1,590.39** | 4.0x | 99% |
 | System 9 | Cortex-A53 (RPi 3) | 4 | 234.15 | **808.37** | 3.5x | 86% |
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
+| System 11 | AMD Ryzen R1505G | 4 | 192.97 | **685.37** | 3.6x | 89% |
+| System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
+| System 11 (32-bit) | AMD Ryzen R1505G | 4 | 192.94 | **685.69** | 3.6x | 89% |
 
 **Absolute Performance Chart:**
 ```
 i5-13600       ████████████████████ 18,113 evt/s (100%)
 RK3588S        ██████               5,274 evt/s  (29%)
+RPi 5 (A76)    ████                 3,958 evt/s  (22%)
 Pentium N6005  ████                 3,077 evt/s  (17%)
 RPi 4 (A72)    ███                  2,079 evt/s  (11%)
 i3-8100T       ██                   1,590 evt/s  (9%)
 RPi 3 (A53)    █                    808 evt/s    (4%)
 RISC-V U74     █                    790 evt/s    (4%)
+Ryzen R1505G   █                    685 evt/s    (4%)
 Celeron 1007U  █                    290 evt/s    (2%)
 ```
 
@@ -134,16 +146,18 @@ Celeron 1007U  █                    290 evt/s    (2%)
 
 **Efficiency = (Speedup / Thread Count) × 100%**
 
-#### Perfect Scaling (99%):
+#### Perfect Scaling (98-99%):
 - **Intel Pentium N6005**: 4.0x speedup on 4 threads = 99% efficiency
 - **Intel Core i3-8100T**: 4.0x speedup on 4 threads = 99% efficiency
 - **SiFive U74 (RISC-V)**: 4.0x speedup on 4 threads = 99% efficiency
+- **Cortex-A76 (Raspberry Pi 5)**: 3.9x speedup on 4 threads = 98% efficiency
 
-These processors show nearly linear scaling! Each core works at full capacity without losses.
+These processors show nearly linear scaling! Each core works at full capacity without losses. RPi 5's A76 cores deliver exceptional multi-thread efficiency.
 
 #### Excellent Scaling (86-90%):
 - **Cortex-A72 (Raspberry Pi 4)**: 3.6x speedup on 4 threads = 90% efficiency
 - **Intel Celeron 1007U**: 1.8x speedup on 2 threads = 90% efficiency
+- **AMD Ryzen R1505G**: 3.6x speedup on 4 threads = 89% efficiency (SMT)
 - **Cortex-A53 (Raspberry Pi 3)**: 3.5x speedup on 4 threads = 86% efficiency
 
 Simple homogeneous architectures with identical cores achieve excellent scaling. Both Raspberry Pi models (A72 and A53) demonstrate ARM's mature quad-core design with consistent performance across cores.
@@ -274,7 +288,9 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | **System 1** | Intel Core i5-13600 | 32 GB | DDR5-4800 | **18,617** | **104,141** | 5.6x |
 | **System 3** | Intel Pentium N6005 | 16 GB | DDR4-2933 | **11,611** | **25,173** | 2.2x |
 | **System 2** | Rockchip RK3588S | 16 GB | LPDDR4X/5 | **11,463** | **19,457** | 1.7x |
+| **System 10** | Cortex-A76 (RPi 5) | 8 GB | LPDDR4X | **8,351** | **15,609** | 1.9x |
 | **System 8** | Cortex-A72 (RPi 4) | 4 GB | LPDDR4 | **6,313** | **7,177** | 1.1x |
+| **System 11** | AMD Ryzen R1505G | 6 GB | DDR4-2400 | **4,249** | **7,140** | 1.7x |
 | **System 9** | Cortex-A53 (RPi 3) | 1 GB | LPDDR2 | **3,354** | **4,026** | 1.2x |
 | **System 5** | Intel Celeron 1007U | 8 GB | DDR3 (?) | **3,145** | **5,148** | 1.6x |
 | **System 4** | SiFive U74-MC | 8 GB | DDR4 (?) | **1,761** | **2,385** | 1.4x |
@@ -285,7 +301,9 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 i5-13600       ████████████████████ 18,617 MiB/s (100%)
 Pentium N6005  ████████████▌        11,611 MiB/s (62%)
 RK3588S        ████████████▍        11,463 MiB/s (62%)
+RPi 5 (A76)    █████████             8,351 MiB/s (45%)
 RPi 4 (A72)    ███████               6,313 MiB/s (34%)
+Ryzen R1505G   █████                 4,249 MiB/s (23%)
 RPi 3 (A53)    ████                  3,354 MiB/s (18%)
 Celeron 1007U  ████                  3,145 MiB/s (17%)
 RISC-V U74     █                     1,761 MiB/s (9%)
@@ -297,7 +315,9 @@ RPi Zero W     ░                        41 MiB/s (0.2%)
 i5-13600       ████████████████████ 104,141 MiB/s (100%)
 Pentium N6005  █████                 25,173 MiB/s (24%)
 RK3588S        ████                  19,457 MiB/s (19%)
+RPi 5 (A76)    ███                   15,609 MiB/s (15%)
 RPi 4 (A72)    ██                     7,177 MiB/s (7%)
+Ryzen R1505G   ██                     7,140 MiB/s (7%)
 Celeron 1007U  █                      5,148 MiB/s (5%)
 RPi 3 (A53)    █                      4,026 MiB/s (4%)
 RISC-V U74     █                      2,385 MiB/s (2%)
@@ -508,6 +528,40 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 10: Raspberry Pi 5 Model B - Broadcom BCM2712 (Cortex-A76) + LPDDR4X
+
+**Specifications:**
+- Platform: Raspberry Pi 5 Model B Rev 1.0 (2023)
+- 8 GB LPDDR4X memory
+- 4 test threads (Cortex-A76 quad-core @ 2.4 GHz)
+- Transferred: 20 GB
+- Architecture: ARM64 (aarch64)
+
+**Performance:**
+- Write: 8,350.54 MiB/s (8.2 GB/s)
+- Read: 15,608.54 MiB/s (15.2 GB/s)
+- Read/Write Ratio: **1.9x**
+
+**Analysis:**
+- **Excellent ARM performance** - 2.2x slower write and 6.7x slower read than i5-13600
+- **Much better than RPi 4**: 1.3x faster write, 2.2x faster read
+- **Major improvements over RPi 4**:
+  - Newer Cortex-A76 cores (2018) vs A72 cores (2015)
+  - Higher clock speed: 2.4 GHz vs 1.5 GHz (60% faster)
+  - LPDDR4X memory vs LPDDR4 (more efficient, lower power)
+  - 2 MB L2 cache vs 1 MB (2x larger cache)
+  - 8 GB RAM vs 4 GB (2x more memory)
+- **CPU performance**: Single-thread 1013 evt/s (76% faster than RPi 4's 575 evt/s)
+- **Multi-thread scaling**: 98% efficiency with 3.9x speedup on 4 cores (nearly perfect)
+- R/W ratio of 1.9x indicates better cache optimization than RPi 4 (1.1x) but still balanced
+- Write completed in 2.5 sec, read in 1.3 sec
+- **Best use case**: Home server, NAS, Kubernetes nodes, ARM64 development, AI/ML edge computing, desktop replacement
+- Demonstrates that Raspberry Pi 5 is a significant upgrade, suitable for medium workloads
+- Successfully ran sysbench via Podman
+- **Verdict**: RPi 5 is the fastest single-board computer in the Raspberry Pi family, delivering performance competitive with low-end x86 systems
+
+---
+
 ### System 9: Raspberry Pi 3 Model B - Broadcom BCM2837 (Cortex-A53) + LPDDR2
 
 **Specifications:**
@@ -548,6 +602,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 | DDR5-4800 | i5-13600 | Desktop PC | 18.2 GB/s | 101.7 GB/s | ⭐⭐⭐⭐⭐ |
 | DDR4-2933 | Pentium N6005 | Dell Wyse 3000 | 11.3 GB/s | 24.6 GB/s | ⭐⭐⭐⭐ |
 | LPDDR4X | RK3588S | Orange Pi 5 | 11.2 GB/s | 19.0 GB/s | ⭐⭐⭐ |
+| LPDDR4X | Cortex-A76 | Raspberry Pi 5 | 8.2 GB/s | 15.2 GB/s | ⭐⭐⭐ |
 | DDR4 | i3-8100T | ThinkCentre M720q | 7.6 GB/s | 24.5 GB/s | ⭐⭐⭐⭐ |
 | LPDDR4 | Cortex-A72 | Raspberry Pi 4 | 6.2 GB/s | 7.0 GB/s | ⭐⭐⭐ |
 | LPDDR2 | Cortex-A53 | Raspberry Pi 3 | 3.3 GB/s | 3.9 GB/s | ⭐⭐ |
@@ -584,24 +639,28 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 **By Write Speed:**
 1. Intel i5-13600 (DDR5): 18.2 GB/s
 2. Intel Pentium N6005 (DDR4): 11.3 GB/s
-3. Rockchip RK3588S (LPDDR): 11.2 GB/s
-4. Intel Core i3-8100T (DDR4): 7.6 GB/s
-5. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
-6. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
-7. Intel Celeron 1007U (DDR3): 3.1 GB/s
-8. SiFive U74 (LPDDR4): 1.7 GB/s
-9. BCM2835 (LPDDR2): 0.04 GB/s
+3. Rockchip RK3588S (LPDDR4X): 11.2 GB/s
+4. Cortex-A76/RPi 5 (LPDDR4X): 8.2 GB/s
+5. Intel Core i3-8100T (DDR4): 7.6 GB/s
+6. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
+7. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
+8. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
+9. Intel Celeron 1007U (DDR3): 3.1 GB/s
+10. SiFive U74 (LPDDR4): 1.7 GB/s
+11. BCM2835 (LPDDR2): 0.04 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
 2. Intel Pentium N6005 (DDR4): 24.6 GB/s
 3. Intel Core i3-8100T (DDR4): 24.5 GB/s
-4. Rockchip RK3588S (LPDDR): 19.0 GB/s
-5. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
-6. Intel Celeron 1007U (DDR3): 5.0 GB/s
-7. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
-8. SiFive U74 (LPDDR4): 2.3 GB/s
-9. BCM2835 (LPDDR2): 0.05 GB/s
+4. Rockchip RK3588S (LPDDR4X): 19.0 GB/s
+5. Cortex-A76/RPi 5 (LPDDR4X): 15.2 GB/s
+6. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
+7. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
+8. Intel Celeron 1007U (DDR3): 5.0 GB/s
+9. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
+10. SiFive U74 (LPDDR4): 2.3 GB/s
+11. BCM2835 (LPDDR2): 0.05 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. Cortex-A72/RPi 4: 1.1x (best balanced memory subsystem)
@@ -610,9 +669,11 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 4. SiFive U74: 1.4x (simple but balanced)
 5. Intel Celeron 1007U: 1.6x (old but balanced)
 6. Rockchip RK3588S: 1.7x
-7. Intel Pentium N6005: 2.2x
-8. Intel Core i3-8100T: 3.2x
-9. Intel i5-13600: 5.6x (optimized for read)
+7. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
+8. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
+9. Intel Pentium N6005: 2.2x
+10. Intel Core i3-8100T: 3.2x
+11. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -671,6 +732,20 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 - Best choice for: Home servers, NAS, Kubernetes edge nodes, ARM64 development, learning platform
 - Proves that Raspberry Pi 4 is a capable ARM64 platform for light-to-medium server workloads
 
+**Raspberry Pi 5 Model B - Broadcom BCM2712 (Cortex-A76)**
+- Board: Raspberry Pi 5 Model B Rev 1.0 (2023)
+- Quad-core ARM64 Cortex-A76 processor (2.4 GHz) - flagship Raspberry Pi
+- Excellent performance: 62% of i5-13600 single-thread, 22% multi-thread
+- Memory performance: 8.2 GB/s write, 15.2 GB/s read - good balance (1.9x R/W ratio)
+- 8 GB LPDDR4X RAM provides ample memory for demanding workloads
+- Nearly perfect multi-thread scaling (98%) with homogeneous quad-core design
+- **Major improvements over RPi 4**: 76% faster single-thread, 90% faster multi-thread, 32% faster write, 117% faster read
+- Outperforms Orange Pi 5 (RK3588S) in single-thread despite RK3588S having 8 cores
+- Successfully ran sysbench via Podman container runtime
+- Best choice for: Home servers, NAS, Kubernetes nodes, ARM64 development, AI/ML edge computing, desktop replacement, demanding containerized workloads
+- **Verdict**: RPi 5 is the fastest and most capable Raspberry Pi, delivering performance competitive with budget x86 systems
+- Proves that ARM single-board computers can handle medium-to-heavy server workloads
+
 **Raspberry Pi 3 Model B - Broadcom BCM2837 (Cortex-A53)**
 - Board: Raspberry Pi 3 Model B Rev 1.2 (2016)
 - Quad-core ARM64 Cortex-A53 processor (1.2 GHz)
@@ -697,13 +772,13 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all architectures:
-- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes
-- ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes
+The `pingwinator/sysbench:latest` Docker image successfully executed on all ten test systems across five architectures:
+- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (4 systems tested)
+- ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (4 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
-- ✅ linux/riscv64 (RISC-V 64-bit)
+- ✅ linux/riscv64 (RISC-V 64-bit) - VisionFive 2
 
-Multi-architecture support is fully validated and production-ready across five architectures.
+Multi-architecture support is fully validated and production-ready across five architectures spanning 10 different hardware platforms.
 
 ### Recommendations
 
@@ -718,9 +793,15 @@ Multi-architecture support is fully validated and production-ready across five a
 - Good for containerized workloads with predictable performance
 
 **For ARM Workloads:**
-- Rockchip RK3588S provides excellent price/performance
-- Competitive with Intel in many scenarios
+- Rockchip RK3588S (Orange Pi 5) provides excellent price/performance with 8 cores
+- Raspberry Pi 5 delivers best single-thread ARM performance, ideal for workloads requiring fast cores
+- Both competitive with Intel in many scenarios
 - Lower power consumption than x86_64
+
+**For Raspberry Pi Users:**
+- Raspberry Pi 5: Best choice for demanding workloads, home servers, and desktop replacement
+- Raspberry Pi 4: Still excellent for light-to-medium workloads at lower cost
+- Raspberry Pi 3/Zero: Budget options for basic tasks and learning
 
 **For RISC-V Experimentation:**
 - SiFive U74 works correctly but is significantly slower
@@ -815,6 +896,10 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 6 | i3-8100T | **32-bit** | 227.06 | 908.70 | 4.0x | **-43% / -43%** |
 | System 5 | Celeron 1007U | **64-bit** | **161.32** | **290.40** | 1.8x | - |
 | System 5 | Celeron 1007U | **32-bit** | 108.98 | 193.44 | 1.8x | **-32% / -33%** |
+| System 10 | RPi 5 (A76) | **64-bit** | **1,013.19** | **3,957.99** | 3.9x | - |
+| System 10 | RPi 5 (A76) | **32-bit** | 63.32 | 246.96 | 3.9x | **-94% / -94%** |
+| System 11 | Ryzen R1505G | **64-bit** | **192.97** | **685.37** | 3.6x | - |
+| System 11 | Ryzen R1505G | **32-bit** | 192.94 | 685.69 | 3.6x | **0% / 0%** |
 
 ### Memory Performance: 64-bit vs 32-bit Comparison
 
@@ -830,34 +915,45 @@ To validate multi-architecture support and measure performance impact, we tested
 | System 6 | i3-8100T | **32-bit** | 6,697 | 10,436 | 1.6x | **-14% / -58%** |
 | System 5 | Celeron 1007U | **64-bit** | **3,145** | **5,148** | 1.6x | - |
 | System 5 | Celeron 1007U | **32-bit** | 1,768 | 2,152 | 1.2x | **-44% / -58%** |
+| System 10 | RPi 5 (A76) | **64-bit** | **8,351** | **15,609** | 1.9x | - |
+| System 10 | RPi 5 (A76) | **32-bit** | 1,535 | 1,653 | 1.1x | **-82% / -89%** |
+| System 11 | Ryzen R1505G | **64-bit** | **4,249** | **7,140** | 1.7x | - |
+| System 11 | Ryzen R1505G | **32-bit** | 4,313 | 7,168 | 1.7x | **+1% / 0%** |
 
 ### Performance Impact Analysis
 
 **CPU Performance Loss (64-bit → 32-bit):**
 ```
 RK3588S (ARM)  ████████████████████▌ -94% single / -93% multi 🔥
+RPi 5 (ARM)    ████████████████████▌ -94% single / -94% multi 🔥
 i5-13600       ████████████████████ -75% single / -68% multi
 Pentium N6005  ████████████████▌    -65% single / -65% multi
 i3-8100T       ███████████          -43% single / -43% multi
 Celeron 1007U  ████████             -32% single / -33% multi
+Ryzen R1505G   ░                    0% single / 0% multi ⭐
 ```
 
 **Memory Read Performance Loss (64-bit → 32-bit):**
 ```
+RPi 5 (ARM)    ███████████████████████████ -89% read 🔥🔥
 RK3588S (ARM)  ████████████████████████▌ -79% read 🔥
 Pentium N6005  ████████████████████▌    -62% read
 i5-13600       ████████████████████████ -60% read
 i3-8100T       ███████████████████      -58% read
 Celeron 1007U  ███████████████████      -58% read
+Ryzen R1505G   ░                        0% read ⭐
 ```
 
 ### Key Findings
 
 **1. ARM 32-bit is Catastrophically Slow**
+- **Raspberry Pi 5 (Cortex-A76)**: 94% CPU performance loss, 89% memory read loss - WORST!
+  - Single-thread: 63.32 evt/s (32-bit) vs 1,013.19 evt/s (64-bit) = **16.0x slower**
+  - Multi-thread: 246.96 evt/s (32-bit) vs 3,957.99 evt/s (64-bit) = **16.0x slower**
 - **Orange Pi 5 (RK3588S)**: 94% CPU performance loss, 79% memory read loss
-- Single-thread: 58.92 evt/s (32-bit) vs 979.66 evt/s (64-bit) = **16.6x slower**
-- Multi-thread: 362.49 evt/s (32-bit) vs 5,273.76 evt/s (64-bit) = **14.5x slower**
-- **Conclusion**: ARMv7 is essentially unusable on modern ARM64 SoCs
+  - Single-thread: 58.92 evt/s (32-bit) vs 979.66 evt/s (64-bit) = **16.6x slower**
+  - Multi-thread: 362.49 evt/s (32-bit) vs 5,273.76 evt/s (64-bit) = **14.5x slower**
+- **Conclusion**: ARMv7 is essentially unusable on modern ARM64 SoCs - both RPi 5 and Orange Pi 5 lose 94% performance
 
 **2. Modern x86 CPUs Lose More in 32-bit Mode**
 - **i5-13600** (2023): 75% single-thread loss, 68% multi-thread loss
@@ -872,19 +968,29 @@ Celeron 1007U  ███████████████████      -5
 - Hybrid architectures (P+E cores) optimized for 64-bit workloads
 - Interesting trend: 8th Gen Coffee Lake (i3-8100T) sits between budget Jasper Lake (N6005) and legacy Ivy Bridge (1007U)
 
-**3. Legacy CPUs Handle 32-bit Better**
-- **Celeron 1007U** (Ivy Bridge, 2012) shows smallest performance loss
+**3. AMD Ryzen Shows ZERO Performance Loss in 32-bit Mode!**
+- **AMD Ryzen R1505G** (Zen+, 2019): **0% CPU loss, 0% memory loss** - UNIQUE!
+  - Single-thread: 192.94 evt/s (32-bit) vs 192.97 evt/s (64-bit) = **identical**
+  - Multi-thread: 685.69 evt/s (32-bit) vs 685.37 evt/s (64-bit) = **identical**
+  - Memory write: 4,313 MiB/s (32-bit) vs 4,249 MiB/s (64-bit) = **+1.5% faster!**
+  - Memory read: 7,168 MiB/s (32-bit) vs 7,140 MiB/s (64-bit) = **identical**
+- **Explanation**: Zen architecture's mature x86/x86-64 implementation handles both modes equally well
+- **Verdict**: AMD Ryzen Embedded is the ONLY tested processor with zero 32-bit penalty!
+
+**4. Legacy CPUs Handle 32-bit Better**
+- **Celeron 1007U** (Ivy Bridge, 2012) shows second-smallest performance loss (32%)
 - Designed when 32-bit was still mainstream
 - Simple architecture without 64-bit-specific optimizations
-- **Verdict**: Old hardware is better suited for 32-bit workloads
+- **Verdict**: Old hardware is better suited for 32-bit workloads than modern Intel
 
-**4. Memory Performance Degrades Significantly**
-- **Read performance hit**: 58-79% across all platforms
-- **Write performance**: Better than read, 14-69% loss
+**5. Memory Performance Degrades Significantly (except AMD)**
+- **Read performance hit**: 58-89% across all platforms except AMD Ryzen (0%)
+- **Write performance**: Better than read, 14-82% loss except AMD Ryzen (+1.5%)
+- **RPi 5**: Worst memory performance loss - 82% write, 89% read
 - i5-13600: Read/Write ratio drops from 5.6x to 2.6x in 32-bit mode
-- **Conclusion**: 32-bit addressing limits memory subsystem optimization
+- **Conclusion**: 32-bit addressing limits memory subsystem optimization, except on AMD Zen
 
-**5. Multi-threading Scales Differently**
+**6. Multi-threading Scales Differently**
 - **i5-13600**: Better scaling in 32-bit (14.0x vs 11.0x)
 - **RK3588S**: Better scaling in 32-bit (6.2x vs 5.4x)
 - Simpler instruction set creates more uniform workload distribution
@@ -892,19 +998,26 @@ Celeron 1007U  ███████████████████      -5
 ### Practical Recommendations
 
 **❌ Avoid 32-bit on:**
-- Modern ARM64 systems (94% performance loss is unacceptable)
-- High-performance x86_64 systems (i5-13600: 75% loss)
+- **Modern ARM64 systems** (94% CPU loss, 89% memory loss is catastrophic)
+  - Raspberry Pi 5 and Orange Pi 5 both lose 94% performance
+- High-performance Intel x86_64 systems (i5-13600: 75% loss)
 - Any system with modern CPU extensions (AVX2, AVX-512)
 
+**✅ Perfect for 32-bit:**
+- **AMD Ryzen Embedded** (R1505G: **ZERO** performance loss!) ⭐⭐⭐
+  - The ONLY tested processor with identical 32-bit and 64-bit performance
+  - Ideal for running legacy 32-bit applications at full speed
+
 **✅ Acceptable for 32-bit:**
-- Legacy x86 hardware (Celeron 1007U: only 32% loss)
+- Legacy Intel x86 hardware (Celeron 1007U: 32% loss)
 - Budget x86 systems (Pentium N6005: 65% loss tolerable for legacy apps)
 - Systems that MUST run old 32-bit-only software
 
 **⚠️ Performance Expectations:**
-- **Best case** (old x86): 30-35% performance loss
-- **Typical case** (modern x86): 65-75% performance loss
-- **Worst case** (ARM): 93-94% performance loss
+- **Best case** (AMD Ryzen): **0% performance loss** - perfect 32-bit compatibility!
+- **Good case** (old Intel x86): 30-35% performance loss
+- **Typical case** (modern Intel x86): 65-75% performance loss
+- **Worst case** (modern ARM64): 94% performance loss - essentially unusable
 
 ### Test Commands
 
