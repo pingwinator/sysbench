@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across fifteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Celeron J4025, Intel Celeron J1800, AMD Ryzen Embedded, AMD G-T56N, Intel Pentium N6005, Intel Celeron 1007U), ARM64 (Rockchip RK3588S, Apple M1, Raspberry Pi 5, Raspberry Pi 4, Raspberry Pi 3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across sixteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Pentium N6005, Intel Celeron 1007U/J4025/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -25,6 +25,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 12** | Synology DS220+ NAS | Intel Celeron J4025 (Gemini Lake) | x86_64 | 2/2 | 2000 MHz | L2: 4 MB | 10 GB | DDR4-2666 |
 | **System 13** | QNAP TS-251+ NAS | Intel Celeron J1800 (Bay Trail) | x86_64 | 2/2 | 2410 MHz | L2: 1 MB | 16 GB | DDR3L |
 | **System 14** | Fustro S900/S920 | AMD G-T56N (Ontario/Zacate) | x86_64 | 2/2 | 1650 MHz | L2: 1 MB | 3.4 GB | DDR3 (?) |
+| **System 16** | Lenovo ThinkPad T480 | Intel Core i5-8250U (Kaby Lake R) | x86_64 | 4/8 | 3400 MHz | L3: 6 MB | 16 GB | DDR4 (?) |
 
 ---
 
@@ -49,6 +50,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 3 | Intel Pentium N6005 | 775.24 | 1.29 ms | 47% |
 | System 12 | Intel Celeron J4025 | 642.11 | 1.56 ms | 39% |
 | System 8 | Cortex-A72 (RPi 4) | 575.31 | 1.74 ms | 35% |
+| System 16 | Intel Core i5-8250U | 436.43 | 2.29 ms | 27% |
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
@@ -67,6 +69,7 @@ RK3588S        ████████████         980 evt/s   (60%)
 Pentium N6005  █████████            775 evt/s   (47%)
 Celeron J4025  ████████             642 evt/s   (39%)
 RPi 4 (A72)    ███████              575 evt/s   (35%)
+i5-8250U       ██████               436 evt/s   (27%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
 RISC-V U74     ██                   199 evt/s   (12%)
@@ -133,17 +136,19 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 2 | Rockchip RK3588S | 8 | 979.66 | **5,273.76** | 5.4x | 67% |
 | System 10 | Cortex-A76 (RPi 5) | 4 | 1,013.19 | **3,957.99** | 3.9x | 98% |
 | System 3 | Intel Pentium N6005 | 4 | 775.24 | **3,077.02** | 4.0x | 99% |
+| System 16 | Intel Core i5-8250U | 8 | 436.43 | **2,951.56** | 6.8x | 85% |
 | System 8 | Cortex-A72 (RPi 4) | 4 | 575.31 | **2,078.67** | 3.6x | 90% |
 | System 6 | Intel Core i3-8100T | 4 | 398.65 | **1,590.39** | 4.0x | 99% |
 | System 9 | Cortex-A53 (RPi 3) | 4 | 234.15 | **808.37** | 3.5x | 86% |
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
 | System 11 | AMD Ryzen R1505G | 4 | 192.97 | **685.37** | 3.6x | 89% |
 | System 12 | Intel Celeron J4025 | 2 | 642.11 | **1,230.64** | 1.9x | 96% |
-| System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
+| System 12 (32-bit) | Intel Celeron J4025 | 2 | 238.93 | **461.86** | 1.9x | 97% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
+| System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
+| System 16 (32-bit) | Intel Core i5-8250U | 8 | 249.15 | **1,691.99** | 6.8x | 85% |
 | System 13 | Intel Celeron J1800 | 2 | 153.20 | **163.05** | 1.1x | 53% |
 | System 14 | AMD G-T56N | 2 | 63.01 | **121.86** | 1.9x | 97% |
-| System 12 (32-bit) | Intel Celeron J4025 | 2 | 238.93 | **461.86** | 1.9x | 97% |
 | System 13 (32-bit) | Intel Celeron J1800 | 2 | 91.92 | **143.71** | 1.6x | 78% |
 | System 11 (32-bit) | AMD Ryzen R1505G | 4 | 192.94 | **685.69** | 3.6x | 89% |
 
@@ -155,6 +160,7 @@ M1 (Container) ████████████████     14,726 evt/s
 RK3588S        ██████               5,274 evt/s  (29%)
 RPi 5 (A76)    ████                 3,958 evt/s  (22%)
 Pentium N6005  ████                 3,077 evt/s  (17%)
+i5-8250U       ███                  2,952 evt/s  (16%)
 RPi 4 (A72)    ███                  2,079 evt/s  (11%)
 i3-8100T       ██                   1,590 evt/s  (9%)
 RPi 3 (A53)    █                    808 evt/s    (4%)
@@ -307,6 +313,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System | Processor | RAM | Memory Type | Write (MiB/s) | Read (MiB/s) | Read/Write Ratio |
 |--------|-----------|-----|-------------|---------------|--------------|------------------|
 | **System 1** | Intel Core i5-13600 | 32 GB | DDR5-4800 | **18,617** | **104,141** | 5.6x |
+| **System 16** | Intel Core i5-8250U | 16 GB | DDR4 (?) | **15,175** | **29,964** | 2.0x |
 | **System 3** | Intel Pentium N6005 | 16 GB | DDR4-2933 | **11,611** | **25,173** | 2.2x |
 | **System 15** | Apple M1 (Container) | 8 GB | LPDDR4X (Unified) | **9,277** | **29,623** | 3.2x |
 | **System 15** | Apple M1 (Docker) | 8 GB | LPDDR4X (Unified) | **6,682** | **19,804** | 3.0x |
@@ -325,6 +332,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 **Write Performance Chart:**
 ```
 i5-13600       ████████████████████ 18,617 MiB/s (100%)
+i5-8250U       ████████████████▌    15,175 MiB/s (82%)
 Pentium N6005  ████████████▌        11,611 MiB/s (62%)
 RK3588S        ████████████▍        11,463 MiB/s (62%)
 M1 (Container) ██████████            9,277 MiB/s (50%)
@@ -344,6 +352,7 @@ RPi Zero W     ░                        41 MiB/s (0.2%)
 **Read Performance Chart:**
 ```
 i5-13600       ████████████████████ 104,141 MiB/s (100%)
+i5-8250U       ██████                29,964 MiB/s (29%)
 M1 (Container) ██████                29,623 MiB/s (28%)
 Pentium N6005  █████                 25,173 MiB/s (24%)
 M1 (Docker)    ████                  19,804 MiB/s (19%)
@@ -855,11 +864,65 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 16: Lenovo ThinkPad T480 - Intel Core i5-8250U + DDR4
+
+**Specifications:**
+- Platform: Lenovo ThinkPad T480 laptop (2017)
+- 16 GB DDR4 memory (dual-channel)
+- 8 test threads (4 cores / 8 threads via HyperThreading)
+- Transferred: 50 GB
+- Architecture: x86_64 (Intel 64)
+- Operating System: Ubuntu 24.04.3 LTS
+- Processor: Intel Core i5-8250U (Kaby Lake Refresh, 8th Gen, 1.6-3.4 GHz)
+- Cache: L1: 256 KB, L2: 1 MB, L3: 6 MB
+
+**Performance:**
+- Write: 15,174.77 MiB/s (14.8 GB/s)
+- Read: 29,964.03 MiB/s (29.3 GB/s)
+- Read/Write Ratio: **2.0x**
+
+**CPU Performance:**
+- Single-thread: 436.43 evt/s (27% of i5-13600)
+- Multi-thread: 2,951.56 evt/s (16% of i5-13600)
+- Speedup: 6.8x on 8 threads = 85% efficiency
+- 32-bit single: 249.15 evt/s (-43% loss)
+- 32-bit multi: 1,691.99 evt/s (-43% loss)
+
+**Analysis:**
+- **Strong laptop performance** - 1.2x slower write and 3.5x slower read than i5-13600
+- **Excellent CPU scaling**: 85% efficiency with HyperThreading (6.8x on 8 threads)
+- **Competitive with desktop systems**: Outperforms desktop i3-8100T by 9% in single-thread
+- **Better than Apple M1 Docker in memory**: Beats M1 Docker Desktop in reads (29.9 vs 19.8 GB/s)
+- **Reasons for good performance**:
+  - Kaby Lake Refresh architecture (2017) - mature and efficient
+  - HyperThreading provides good thread scaling (85% efficiency)
+  - 6 MB L3 cache helps memory read performance
+  - DDR4 dual-channel memory provides good bandwidth
+  - 1.6 GHz base, 3.4 GHz turbo - good frequency range for laptop
+- R/W ratio of 2.0x indicates balanced caching
+- Write completed in 3.4 sec, read in 1.7 sec
+- **32-bit performance**: -43% CPU loss consistent in both single and multi-thread
+- **32-bit memory**: -53% read loss (29.9 → 14.0 GB/s) due to 32-bit address space limitations
+
+**Key Findings:**
+1. **Laptop i5-8250U competitive with desktop systems** - Beats desktop i3-8100T
+2. **Excellent HyperThreading scaling** - 85% efficiency is better than many desktop systems
+3. **Strong memory performance** - Second fastest DDR4 system after i5-13600
+4. **Balanced system** - Good mix of CPU and memory performance
+5. **32-bit consistent penalty** - -43% CPU, -53% memory across the board
+
+**Best use case**: Mobile workstations, development laptops, Docker development, virtualization, general-purpose computing, business laptops
+
+**Verdict**: Lenovo ThinkPad T480 with i5-8250U demonstrates that modern laptop processors can compete with desktop systems. The 85% HyperThreading efficiency and strong memory performance make it an excellent choice for mobile development and general computing workloads.
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
 |------------|-----------|----------|-------|------|----------------|
 | DDR5-4800 | i5-13600 | Desktop PC | 18.2 GB/s | 101.7 GB/s | ⭐⭐⭐⭐⭐ |
+| DDR4 | i5-8250U | ThinkPad T480 | 14.8 GB/s | 29.3 GB/s | ⭐⭐⭐⭐ |
 | DDR4-2933 | Pentium N6005 | Dell Wyse 3000 | 11.3 GB/s | 24.6 GB/s | ⭐⭐⭐⭐ |
 | LPDDR4X | RK3588S | Orange Pi 5 | 11.2 GB/s | 19.0 GB/s | ⭐⭐⭐ |
 | LPDDR4X Unified | Apple M1 | Mac mini (Container) | 9.1 GB/s | 28.9 GB/s | ⭐⭐⭐⭐ (Memory) |
@@ -904,39 +967,41 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 **By Write Speed:**
 1. Intel i5-13600 (DDR5): 18.2 GB/s
-2. Intel Pentium N6005 (DDR4): 11.3 GB/s
-3. Rockchip RK3588S (LPDDR4X): 11.2 GB/s
-4. Apple M1 (LPDDR4X Unified, Container): 9.1 GB/s
-5. Cortex-A76/RPi 5 (LPDDR4X): 8.2 GB/s
-6. Intel Core i3-8100T (DDR4): 7.6 GB/s
-7. Intel Celeron J4025 (DDR4-2666): 6.8 GB/s
-8. Apple M1 (LPDDR4X Unified, Docker): 6.5 GB/s
-9. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
-10. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
-11. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
-12. Intel Celeron 1007U (DDR3): 3.1 GB/s
-13. Intel Celeron J1800 (DDR3L): 1.9 GB/s
-14. SiFive U74 (LPDDR4): 1.7 GB/s
-15. AMD G-T56N (DDR3): 1.2 GB/s
-16. BCM2835 (LPDDR2): 0.04 GB/s
+2. Intel i5-8250U (DDR4): 14.8 GB/s
+3. Intel Pentium N6005 (DDR4): 11.3 GB/s
+4. Rockchip RK3588S (LPDDR4X): 11.2 GB/s
+5. Apple M1 (LPDDR4X Unified, Container): 9.1 GB/s
+6. Cortex-A76/RPi 5 (LPDDR4X): 8.2 GB/s
+7. Intel Core i3-8100T (DDR4): 7.6 GB/s
+8. Intel Celeron J4025 (DDR4-2666): 6.8 GB/s
+9. Apple M1 (LPDDR4X Unified, Docker): 6.5 GB/s
+10. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
+11. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
+12. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
+13. Intel Celeron 1007U (DDR3): 3.1 GB/s
+14. Intel Celeron J1800 (DDR3L): 1.9 GB/s
+15. SiFive U74 (LPDDR4): 1.7 GB/s
+16. AMD G-T56N (DDR3): 1.2 GB/s
+17. BCM2835 (LPDDR2): 0.04 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
-2. Apple M1 (LPDDR4X Unified, Container): 28.9 GB/s
-3. Intel Pentium N6005 (DDR4): 24.6 GB/s
-4. Intel Core i3-8100T (DDR4): 24.5 GB/s
-5. Apple M1 (LPDDR4X Unified, Docker): 19.3 GB/s
-6. Rockchip RK3588S (LPDDR4X): 19.0 GB/s
-7. Cortex-A76/RPi 5 (LPDDR4X): 15.2 GB/s
-8. Intel Celeron J4025 (DDR4-2666): 12.3 GB/s
-9. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
-10. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
-11. Intel Celeron 1007U (DDR3): 5.0 GB/s
-12. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
-13. Intel Celeron J1800 (DDR3L): 3.1 GB/s
-14. AMD G-T56N (DDR3): 2.9 GB/s
-15. SiFive U74 (LPDDR4): 2.3 GB/s
-16. BCM2835 (LPDDR2): 0.05 GB/s
+2. Intel i5-8250U (DDR4): 29.3 GB/s
+3. Apple M1 (LPDDR4X Unified, Container): 28.9 GB/s
+4. Intel Pentium N6005 (DDR4): 24.6 GB/s
+5. Intel Core i3-8100T (DDR4): 24.5 GB/s
+6. Apple M1 (LPDDR4X Unified, Docker): 19.3 GB/s
+7. Rockchip RK3588S (LPDDR4X): 19.0 GB/s
+8. Cortex-A76/RPi 5 (LPDDR4X): 15.2 GB/s
+9. Intel Celeron J4025 (DDR4-2666): 12.3 GB/s
+10. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
+11. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
+12. Intel Celeron 1007U (DDR3): 5.0 GB/s
+13. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
+14. Intel Celeron J1800 (DDR3L): 3.1 GB/s
+15. AMD G-T56N (DDR3): 2.9 GB/s
+16. SiFive U74 (LPDDR4): 2.3 GB/s
+17. BCM2835 (LPDDR2): 0.05 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. Cortex-A72/RPi 4: 1.1x (best balanced memory subsystem)
@@ -946,15 +1011,16 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 5. Intel Celeron 1007U: 1.6x (old but balanced)
 6. Intel Celeron J1800: 1.6x (balanced but slow DDR3L)
 7. Rockchip RK3588S: 1.7x
-8. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
+7. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
 9. Intel Celeron J4025: 1.8x (balanced NAS optimized)
 10. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
-11. Intel Pentium N6005: 2.2x
-12. AMD G-T56N: 2.5x (low-power APU with moderate caching)
-13. Apple M1 (Docker): 3.0x (moderate caching with Docker)
-14. Apple M1 (Container): 3.2x (moderate caching with Apple Container)
+11. Intel i5-8250U: 2.0x (balanced laptop DDR4)
+12. Intel Pentium N6005: 2.2x
+13. AMD G-T56N: 2.5x (low-power APU with moderate caching)
+14. Apple M1 (Docker): 3.0x (moderate caching with Docker)
+15. Apple M1 (Container): 3.2x (moderate caching with Apple Container)
 15. Intel Core i3-8100T: 3.2x
-16. Intel i5-13600: 5.6x (optimized for read)
+17. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -1120,8 +1186,8 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all fifteen test systems across five architectures:
-- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (8 systems tested: i5-13600, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G, AMD G-T56N)
+The `pingwinator/sysbench:latest` Docker image successfully executed on all sixteen test systems across five architectures:
+- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (9 systems tested: i5-13600, i5-8250U, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G, AMD G-T56N)
 - ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (5 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3, Apple M1 Mac mini)
 - ✅ linux/arm/v7 (ARMv7) - 32-bit mode tested on ARM64 hardware (Orange Pi 5, RPi 5)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
@@ -1133,7 +1199,7 @@ The `pingwinator/sysbench:latest` Docker image successfully executed on all fift
 - ✅ Docker Desktop for Mac - Native ARM64 and x86_64 via Rosetta 2
 - Both platforms successfully run `pingwinator/sysbench:latest` with different performance characteristics
 
-Multi-architecture support is fully validated and production-ready across six architectures spanning 15 different hardware platforms, including macOS with both Apple Container and Docker Desktop.
+Multi-architecture support is fully validated and production-ready across six architectures spanning 16 different hardware platforms, including macOS with both Apple Container and Docker Desktop.
 
 ### Recommendations
 

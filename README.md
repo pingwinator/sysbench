@@ -165,6 +165,36 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/riscv64,linux/arm/v
   -t pingwinator/sysbench:latest .
 ```
 
+## Benchmark Results
+
+This image has been extensively tested on **16 different systems** across **6 architectures**:
+
+### Tested Platforms
+
+- **9 x86_64 systems**: Intel i5-13600, i5-8250U, Pentium N6005, i3-8100T, Celeron 1007U/J4025/J1800, AMD Ryzen R1505G, AMD G-T56N
+- **5 ARM64 systems**: Apple M1 Mac mini, Rockchip RK3588S, Raspberry Pi 5/4/3
+- **1 ARMv6 system**: Raspberry Pi Zero W
+- **1 RISC-V system**: StarFive VisionFive 2
+
+### Key Findings
+
+- **NEW CHAMPION**: Apple M1 (4,046 evt/s) - 2.46x faster than Intel i5-13600 in single-thread!
+- **Performance range**: 1,400x difference between fastest (Apple M1: 4,046 evt/s) and slowest (RPi Zero W: 2.89 evt/s)
+- **Best efficiency**: Intel Pentium N6005, SiFive U74 - 99% multi-thread scaling
+- **ARM dominance**: Apple M1 proves ARM can outperform x86 in both efficiency and raw performance
+- **32-bit penalty**: Up to 94% performance loss on ARM64, but 0% on AMD Ryzen R1505G
+- **NAS performance**: Synology DS220+ (642 evt/s) significantly outperforms QNAP TS-251+ (153 evt/s)
+- **Rosetta 2 efficiency**: Only 27% performance loss for x86_64 emulation on Apple M1
+
+📊 **Full benchmark results**: See [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md) for detailed performance analysis, comparison charts, and platform-specific insights.
+
+### Container Runtime Support
+
+Tested with **Docker**, **Podman**, and **Apple Container** on various platforms:
+- ✅ Docker: Desktop systems, NAS devices (Synology, QNAP), thin clients, macOS
+- ✅ Podman: Raspberry Pi systems, Orange Pi 5
+- ✅ Apple Container: macOS 15+ with native ARM64 and Rosetta 2 support
+
 ## License
 
 This Docker image packages sysbench, which is licensed under GPL-2.0.
@@ -173,3 +203,4 @@ This Docker image packages sysbench, which is licensed under GPL-2.0.
 
 - [Sysbench GitHub Repository](https://github.com/akopytov/sysbench)
 - [Sysbench Documentation](https://github.com/akopytov/sysbench#documentation)
+- [Full Benchmark Results](BENCHMARK_RESULTS.md)
