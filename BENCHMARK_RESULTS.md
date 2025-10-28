@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across seventeen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Pentium N6005, Intel Celeron 1007U/J4025/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1/M1 Pro, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across eighteen different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, Intel Pentium N6005, Intel Celeron 1007U/J3355/J4025/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1/M1 Pro, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -27,6 +27,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 14** | Fustro S900/S920 | AMD G-T56N (Ontario/Zacate) | x86_64 | 2/2 | 1650 MHz | L2: 1 MB | 3.4 GB | DDR3 (?) |
 | **System 16** | Lenovo ThinkPad T480 | Intel Core i5-8250U (Kaby Lake R) | x86_64 | 4/8 | 3400 MHz | L3: 6 MB | 16 GB | DDR4 (?) |
 | **System 17** | MacBook Pro 14" (2021) | Apple M1 Pro | ARM64 | 10 (8×P+2×E) | 3200 MHz | L2: 24 MB | 16 GB | LPDDR5 (Unified) |
+| **System 18** | Synology DS218+ NAS | Intel Celeron J3355 (Apollo Lake) | x86_64 | 2/2 | 2500 MHz | L2: 1 MB | 6 GB | DDR3L |
 
 ---
 
@@ -52,6 +53,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 3 | Intel Pentium N6005 | 775.24 | 1.29 ms | 47% |
 | System 12 | Intel Celeron J4025 | 642.11 | 1.56 ms | 39% |
 | System 8 | Cortex-A72 (RPi 4) | 575.31 | 1.74 ms | 35% |
+| System 18 | Intel Celeron J3355 | 467.41 | 2.13 ms | 28% |
 | System 16 | Intel Core i5-8250U | 436.43 | 2.29 ms | 27% |
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
@@ -72,6 +74,7 @@ RK3588S        ████████████         980 evt/s   (60%)
 Pentium N6005  █████████            775 evt/s   (47%)
 Celeron J4025  ████████             642 evt/s   (39%)
 RPi 4 (A72)    ███████              575 evt/s   (35%)
+Celeron J3355  ██████               467 evt/s   (28%)
 i5-8250U       ██████               436 evt/s   (27%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
@@ -146,10 +149,12 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
 | System 11 | AMD Ryzen R1505G | 4 | 192.97 | **685.37** | 3.6x | 89% |
 | System 12 | Intel Celeron J4025 | 2 | 642.11 | **1,230.64** | 1.9x | 96% |
+| System 18 | Intel Celeron J3355 | 2 | 467.41 | **836.37** | 1.8x | 90% |
 | System 12 (32-bit) | Intel Celeron J4025 | 2 | 238.93 | **461.86** | 1.9x | 97% |
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
 | System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
 | System 16 (32-bit) | Intel Core i5-8250U | 8 | 249.15 | **1,691.99** | 6.8x | 85% |
+| System 18 (32-bit) | Intel Celeron J3355 | 2 | 186.61 | **328.84** | 1.8x | 88% |
 | System 13 | Intel Celeron J1800 | 2 | 153.20 | **163.05** | 1.1x | 53% |
 | System 14 | AMD G-T56N | 2 | 63.01 | **121.86** | 1.9x | 97% |
 | System 13 (32-bit) | Intel Celeron J1800 | 2 | 91.92 | **143.71** | 1.6x | 78% |
@@ -166,6 +171,7 @@ Pentium N6005  ████                 3,077 evt/s  (17%)
 i5-8250U       ███                  2,952 evt/s  (16%)
 RPi 4 (A72)    ███                  2,079 evt/s  (11%)
 i3-8100T       ██                   1,590 evt/s  (9%)
+Celeron J3355  █                    836 evt/s    (5%)
 RPi 3 (A53)    █                    808 evt/s    (4%)
 RISC-V U74     █                    790 evt/s    (4%)
 Ryzen R1505G   █                    685 evt/s    (4%)
@@ -326,6 +332,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | **System 12** | Intel Celeron J4025 | 10 GB | DDR4-2666 | **7,011** | **12,548** | 1.8x |
 | **System 11** | AMD Ryzen R1505G | 6 GB | DDR4-2400 | **4,249** | **7,140** | 1.7x |
 | **System 9** | Cortex-A53 (RPi 3) | 1 GB | LPDDR2 | **3,354** | **4,026** | 1.2x |
+| **System 18** | Intel Celeron J3355 | 6 GB | DDR3L | **3,551** | **5,441** | 1.5x |
 | **System 5** | Intel Celeron 1007U | 8 GB | DDR3 (?) | **3,145** | **5,148** | 1.6x |
 | **System 13** | Intel Celeron J1800 | 16 GB | DDR3L | **1,965** | **3,226** | 1.6x |
 | **System 4** | SiFive U74-MC | 8 GB | DDR4 (?) | **1,761** | **2,385** | 1.4x |
@@ -344,6 +351,7 @@ Celeron J4025  ████████              7,011 MiB/s (38%)
 M1 (Docker)    ███████▌              6,682 MiB/s (36%)
 RPi 4 (A72)    ███████               6,313 MiB/s (34%)
 Ryzen R1505G   █████                 4,249 MiB/s (23%)
+Celeron J3355  ████                  3,551 MiB/s (19%)
 RPi 3 (A53)    ████                  3,354 MiB/s (18%)
 Celeron 1007U  ████                  3,145 MiB/s (17%)
 Celeron J1800  ██                    1,965 MiB/s (11%)
@@ -364,6 +372,7 @@ RPi 5 (A76)    ███                   15,609 MiB/s (15%)
 Celeron J4025  ███                   12,548 MiB/s (12%)
 RPi 4 (A72)    ██                     7,177 MiB/s (7%)
 Ryzen R1505G   ██                     7,140 MiB/s (7%)
+Celeron J3355  █                      5,441 MiB/s (5%)
 Celeron 1007U  █                      5,148 MiB/s (5%)
 RPi 3 (A53)    █                      4,026 MiB/s (4%)
 Celeron J1800  █                      3,226 MiB/s (3%)
@@ -976,6 +985,47 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 18: Synology DS218+ NAS - Intel Celeron J3355 + DDR3L
+
+**Specifications:**
+- Platform: Synology DS218+ NAS (Apollo Lake, 2016)
+- 6 GB DDR3L memory
+- 2 test threads (2 cores, no HyperThreading)
+- Transferred: 10 GB
+- Architecture: x86_64
+- Operating System: DSM 7 (Synology)
+- Processor: Intel Celeron J3355 (2.0-2.5 GHz)
+- Cache: L2: 1 MB
+
+**Performance:**
+- Write: 3,550.78 MiB/s (3.5 GB/s)
+- Read: 5,441.03 MiB/s (5.3 GB/s)
+- Read/Write Ratio: **1.5x**
+
+**CPU Performance:**
+- Single-thread: 467.41 evt/s (28% of i5-13600)
+- Multi-thread: 836.37 evt/s (1.8x speedup, 90% efficiency)
+- 32-bit single: 186.61 evt/s (-60% loss)
+- 32-bit multi: 328.84 evt/s (-61% loss)
+
+**Analysis:**
+- **Solid NAS performance** - Balanced for file serving and media streaming
+- **Excellent dual-core scaling**: 90% efficiency without HyperThreading
+- **Much better than QNAP TS-251+ (J1800)**: 3.1x faster single-thread, 5.1x faster multi-thread
+- **Reasons for good performance**:
+  - Apollo Lake (2016) more efficient than Bay Trail (2013)
+  - Good frequency range: 2.0-2.5 GHz
+  - DDR3L provides adequate bandwidth for NAS
+  - Balanced memory subsystem (1.5x R/W ratio)
+- **32-bit penalty**: -60% CPU loss (highest among Intel Celerons)
+- **Comparison**: DS220+ (J4025) is 37% faster, but J3355 still competitive
+
+**Best use case**: Home NAS, file storage, media server, Docker containers, Plex/Jellyfin streaming, backup server
+
+**Verdict**: Synology DS218+ with Celeron J3355 is a capable mid-range NAS. While not as fast as newer DS220+ (J4025), it significantly outperforms older Bay Trail systems. The 90% scaling efficiency makes it excellent for NAS workloads.
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
@@ -992,6 +1042,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 | LPDDR4 | Cortex-A72 | Raspberry Pi 4 | 6.2 GB/s | 7.0 GB/s | ⭐⭐⭐ |
 | DDR4-2400 | Ryzen R1505G | HP t640 | 4.1 GB/s | 7.0 GB/s | ⭐⭐ |
 | LPDDR2 | Cortex-A53 | Raspberry Pi 3 | 3.3 GB/s | 3.9 GB/s | ⭐⭐ |
+| DDR3L | Celeron J3355 | Synology DS218+ | 3.5 GB/s | 5.3 GB/s | ⭐⭐ |
 | DDR3 | Celeron 1007U | ASUS VM40B | 3.1 GB/s | 5.0 GB/s | ⭐⭐ |
 | DDR3L | Celeron J1800 | QNAP TS-251+ | 1.9 GB/s | 3.1 GB/s | ⭐ |
 | LPDDR4 | SiFive U74 | VisionFive 2 | 1.7 GB/s | 2.3 GB/s | ⭐ |
@@ -1036,12 +1087,13 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 9. Apple M1 (LPDDR4X Unified, Docker): 6.5 GB/s
 10. Cortex-A72/RPi 4 (LPDDR4): 6.2 GB/s
 11. AMD Ryzen R1505G (DDR4-2400): 4.1 GB/s
-12. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
-13. Intel Celeron 1007U (DDR3): 3.1 GB/s
-14. Intel Celeron J1800 (DDR3L): 1.9 GB/s
-15. SiFive U74 (LPDDR4): 1.7 GB/s
-16. AMD G-T56N (DDR3): 1.2 GB/s
-17. BCM2835 (LPDDR2): 0.04 GB/s
+12. Intel Celeron J3355 (DDR3L): 3.5 GB/s
+13. Cortex-A53/RPi 3 (LPDDR2): 3.3 GB/s
+14. Intel Celeron 1007U (DDR3): 3.1 GB/s
+15. Intel Celeron J1800 (DDR3L): 1.9 GB/s
+16. SiFive U74 (LPDDR4): 1.7 GB/s
+17. AMD G-T56N (DDR3): 1.2 GB/s
+18. BCM2835 (LPDDR2): 0.04 GB/s
 
 **By Read Speed:**
 1. Intel i5-13600 (DDR5): 101.7 GB/s
@@ -1055,31 +1107,33 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 9. Intel Celeron J4025 (DDR4-2666): 12.3 GB/s
 10. AMD Ryzen R1505G (DDR4-2400): 7.0 GB/s
 11. Cortex-A72/RPi 4 (LPDDR4): 7.0 GB/s
-12. Intel Celeron 1007U (DDR3): 5.0 GB/s
-13. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
-14. Intel Celeron J1800 (DDR3L): 3.1 GB/s
-15. AMD G-T56N (DDR3): 2.9 GB/s
-16. SiFive U74 (LPDDR4): 2.3 GB/s
-17. BCM2835 (LPDDR2): 0.05 GB/s
+12. Intel Celeron J3355 (DDR3L): 5.3 GB/s
+13. Intel Celeron 1007U (DDR3): 5.0 GB/s
+14. Cortex-A53/RPi 3 (LPDDR2): 3.9 GB/s
+15. Intel Celeron J1800 (DDR3L): 3.1 GB/s
+16. AMD G-T56N (DDR3): 2.9 GB/s
+17. SiFive U74 (LPDDR4): 2.3 GB/s
+18. BCM2835 (LPDDR2): 0.05 GB/s
 
 **By Balance (R/W ratio closer to 1 = better):**
 1. Cortex-A72/RPi 4: 1.1x (best balanced memory subsystem)
 2. Cortex-A53/RPi 3: 1.2x (excellent balance for LPDDR2)
 3. BCM2835 (RPi Zero W): 1.3x (extremely simple, minimal caching)
 4. SiFive U74: 1.4x (simple but balanced)
-5. Intel Celeron 1007U: 1.6x (old but balanced)
-6. Intel Celeron J1800: 1.6x (balanced but slow DDR3L)
-7. Rockchip RK3588S: 1.7x
-7. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
-9. Intel Celeron J4025: 1.8x (balanced NAS optimized)
-10. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
-11. Intel i5-8250U: 2.0x (balanced laptop DDR4)
-12. Intel Pentium N6005: 2.2x
-13. AMD G-T56N: 2.5x (low-power APU with moderate caching)
-14. Apple M1 (Docker): 3.0x (moderate caching with Docker)
-15. Apple M1 (Container): 3.2x (moderate caching with Apple Container)
-15. Intel Core i3-8100T: 3.2x
-17. Intel i5-13600: 5.6x (optimized for read)
+5. Intel Celeron J3355: 1.5x (balanced DDR3L)
+6. Intel Celeron 1007U: 1.6x (old but balanced)
+7. Intel Celeron J1800: 1.6x (balanced but slow DDR3L)
+8. Rockchip RK3588S: 1.7x
+9. AMD Ryzen R1505G: 1.7x (balanced budget AMD system)
+10. Intel Celeron J4025: 1.8x (balanced NAS optimized)
+11. Cortex-A76/RPi 5: 1.9x (good balance with moderate caching)
+12. Intel i5-8250U: 2.0x (balanced laptop DDR4)
+13. Intel Pentium N6005: 2.2x
+14. AMD G-T56N: 2.5x (low-power APU with moderate caching)
+15. Apple M1 (Docker): 3.0x (moderate caching with Docker)
+16. Apple M1 (Container): 3.2x (moderate caching with Apple Container)
+17. Intel Core i3-8100T: 3.2x
+18. Intel i5-13600: 5.6x (optimized for read)
 
 ---
 
@@ -1245,8 +1299,8 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ### Docker Image Validation
 
-The `pingwinator/sysbench:latest` Docker image successfully executed on all seventeen test systems across five architectures:
-- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (9 systems tested: i5-13600, i5-8250U, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J1800, AMD R1505G, AMD G-T56N)
+The `pingwinator/sysbench:latest` Docker image successfully executed on all eighteen test systems across five architectures:
+- ✅ linux/amd64 (Intel x86_64) - 64-bit and 32-bit modes (10 systems tested: i5-13600, i5-8250U, Pentium N6005, i3-8100T, Celeron 1007U, Celeron J4025, Celeron J3355, Celeron J1800, AMD R1505G, AMD G-T56N)
 - ✅ linux/arm64 (ARM aarch64) - 64-bit and 32-bit modes (6 systems: Orange Pi 5, RPi 5, RPi 4, RPi 3, Apple M1 Mac mini, Apple M1 Pro MacBook Pro 14")
 - ✅ linux/arm/v7 (ARMv7) - 32-bit mode tested on ARM64 hardware (Orange Pi 5, RPi 5)
 - ✅ linux/arm/v6 (ARMv6) - Raspberry Pi Zero W
@@ -1258,7 +1312,7 @@ The `pingwinator/sysbench:latest` Docker image successfully executed on all seve
 - ✅ Docker Desktop for Mac - Native ARM64 and x86_64 via Rosetta 2
 - Both platforms successfully run `pingwinator/sysbench:latest` with different performance characteristics
 
-Multi-architecture support is fully validated and production-ready across six architectures spanning 16 different hardware platforms, including macOS with both Apple Container and Docker Desktop.
+Multi-architecture support is fully validated and production-ready across six architectures spanning 18 different hardware platforms, including macOS with both Apple Container and Docker Desktop.
 
 ### Recommendations
 
