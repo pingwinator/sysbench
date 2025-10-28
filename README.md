@@ -167,11 +167,11 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/riscv64,linux/arm/v
 
 ## Benchmark Results
 
-This image has been extensively tested on **20 different systems** across **6 architectures**:
+This image has been extensively tested on **21 different systems** across **6 architectures**:
 
 ### Tested Platforms
 
-- **12 x86_64 systems**: Intel i5-13600, i5-8250U, i5-6500, Pentium N6005, i3-8100T, Celeron 1007U/J4025/J4105/J3355/J1800, AMD Ryzen R1505G, AMD G-T56N (Fustro S900 - D3003)
+- **13 x86_64 systems**: Intel i5-13600, i5-8250U, i5-6500, i5-4590T, Pentium N6005, i3-8100T, Celeron 1007U/J4025/J4105/J3355/J1800, AMD Ryzen R1505G, AMD G-T56N (Fustro S900 - D3003)
 - **6 ARM64 systems**: Apple M1 Mac mini, Apple M1 Pro MacBook Pro 14", Rockchip RK3588S, Raspberry Pi 5/4/3
 - **1 ARMv6 system**: Raspberry Pi Zero W
 - **1 RISC-V system**: StarFive VisionFive 2

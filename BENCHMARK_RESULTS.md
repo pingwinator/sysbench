@@ -1,6 +1,6 @@
 # Sysbench Multi-Architecture Benchmark Results
 
-This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across twenty different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, 6th Gen, Intel Pentium N6005, Intel Celeron 1007U/J3355/J4025/J4105/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1/M1 Pro, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
+This document contains comprehensive benchmark results for the `pingwinator/sysbench:latest` Docker image tested across twenty-one different systems spanning five architectures: x86_64 (Intel 13th Gen, 8th Gen, 6th Gen, 4th Gen, Intel Pentium N6005, Intel Celeron 1007U/J3355/J4025/J4105/J1800, AMD Ryzen Embedded, AMD G-T56N), ARM64 (Apple M1/M1 Pro, Rockchip RK3588S, Raspberry Pi 5/4/3), ARMv6 (Raspberry Pi Zero W), and RISC-V 64-bit (SiFive).
 
 ## Test Environment
 
@@ -30,6 +30,7 @@ All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64
 | **System 18** | Synology DS218+ NAS | Intel Celeron J3355 (Apollo Lake) | x86_64 | 2/2 | 2500 MHz | L2: 1 MB | 6 GB | DDR3L |
 | **System 19** | Fustro S740 | Intel Celeron J4105 (Gemini Lake) | x86_64 | 4/4 | 2500 MHz | L2: 4 MB | 8 GB | DDR4-2400 |
 | **System 20** | ASUS Z170I PRO GAMING | Intel Core i5-6500 (Skylake) | x86_64 | 4/4 | 3600 MHz | L3: 6 MB | 16 GB | DDR4 (dual-channel) |
+| **System 21** | Fujitsu ESPRIMO Q920 | Intel Core i5-4590T (Haswell) | x86_64 | 4/4 | 3000 MHz | L3: 6 MB | 14 GB | DDR3 |
 
 ---
 
@@ -61,6 +62,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
 | System 16 (WSL) | Intel Core i5-8250U (WSL2) | 222.11 | 4.50 ms | 14% |
+| System 21 | Intel Core i5-4590T | 220.87 | 4.53 ms | 13% |
 | System 19 | Intel Celeron J4105 | 213.51 | 4.68 ms | 13% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
 | System 11 | AMD Ryzen R1505G | 192.97 | 5.18 ms | 12% |
@@ -85,6 +87,7 @@ i5-6500        ██████               422 evt/s   (26%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
 i5-8250U (WSL) ███                  222 evt/s   (14%)
+i5-4590T       ███                  221 evt/s   (13%)
 Celeron J4105  ███                  214 evt/s   (13%)
 RISC-V U74     ██                   199 evt/s   (12%)
 Ryzen R1505G   ██                   193 evt/s   (12%)
@@ -159,6 +162,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
 | System 11 | AMD Ryzen R1505G | 4 | 192.97 | **685.37** | 3.6x | 89% |
 | System 12 | Intel Celeron J4025 | 2 | 642.11 | **1,230.64** | 1.9x | 96% |
+| System 21 | Intel Core i5-4590T | 4 | 220.87 | **879.14** | 4.0x | 99% |
 | System 19 | Intel Celeron J4105 | 4 | 213.51 | **822.24** | 3.9x | 96% |
 | System 19 (32-bit) | Intel Celeron J4105 | 4 | 213.45 | **822.10** | 3.9x | 96% |
 | System 18 | Intel Celeron J3355 | 2 | 467.41 | **836.37** | 1.8x | 90% |
@@ -1182,6 +1186,57 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 ---
 
+### System 21: Fujitsu ESPRIMO Q920 - Intel Core i5-4590T + DDR3
+
+**Specifications:**
+- Platform: Fujitsu ESPRIMO Q920 (Small Form Factor Desktop)
+- 14 GB DDR3 memory
+- 4 test threads (4 cores, no HyperThreading)
+- Transferred: 10 GB
+- Architecture: x86_64
+- Operating System: Ubuntu 24.04.3 LTS
+- Processor: Intel Core i5-4590T (Haswell, 4th Gen, Q2 2014, 2.0-3.0 GHz, 4 cores)
+- Cache: L3: 6 MB
+- TDP: 35W (Low Power "T" variant)
+
+**Performance:**
+- Write: 3,633.53 MiB/s (3.6 GB/s)
+- Read: 4,546.69 MiB/s (4.4 GB/s)
+- Read/Write Ratio: **1.25x**
+
+**CPU Performance:**
+- Single-thread: 220.87 evt/s (13% of i5-13600)
+- Multi-thread: 879.14 evt/s (4.0x speedup, **99% efficiency**)
+
+**I/O Performance:**
+- Read: 1,683.45 MiB/s
+- Write: 1,122.30 MiB/s
+
+**Analysis:**
+- **Perfect quad-core scaling**: 99% efficiency - nearly flawless!
+- **Haswell architecture (2014)**: Mature 22nm process, 4th generation Core
+- **Low TDP variant**: 35W "T" model designed for compact systems and energy efficiency
+- **Excellent scaling**: Joins i3-8100T, Pentium N6005, and U74 at 99% efficiency
+- **Balanced memory**: 1.25x R/W ratio, similar to i5-6500
+- **Moderate memory bandwidth**: 3.6-4.4 GB/s typical for DDR3
+- **Comparison to i5-6500 (6th Gen)**: -48% slower single-thread due to lower base clock (2.0 vs 3.2 GHz)
+- **Comparison to Celeron J4105**: +3% faster single-thread, +7% faster multi-thread
+- **Low power design**: 35W TDP makes it suitable for SFF systems and thin clients
+- **CPU performance**: Solid for 2014 (4 cores @ 2.0-3.0 GHz)
+
+**Key Findings:**
+1. **Perfect multi-core scaling** - 99% efficiency (tied for 1st with i3-8100T/Pentium/U74)
+2. **Excellent efficiency** - Low power consumption (35W) with strong performance
+3. **Balanced memory** - 1.25x R/W ratio
+4. **Haswell longevity** - 10-year-old CPU still delivers excellent scaling
+5. **DDR3 holds up** - 3.6-4.4 GB/s bandwidth adequate for workloads
+
+**Best use case**: Small form factor builds, thin clients, home servers, low-power workstations, Docker hosts, energy-efficient computing
+
+**Verdict**: Fujitsu ESPRIMO Q920 with i5-4590T demonstrates that excellent multi-threading efficiency (99%) can be achieved even with older Haswell architecture (2014) and DDR3 memory. The low-power 35W TDP "T" variant makes it ideal for compact systems where energy efficiency matters. While single-threaded performance is modest due to the 2.0 GHz base clock, the perfect quad-core scaling and balanced memory subsystem make it competitive for multi-threaded workloads. An excellent choice for small business desktops, thin clients, and home servers where power consumption and form factor are priorities.
+
+---
+
 ### Memory Type Comparison
 
 | Memory Type | Processor | Platform | Write | Read | Overall Rating |
@@ -1197,6 +1252,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 | DDR4-2666 | Celeron J4025 | Synology DS220+ | 6.8 GB/s | 12.3 GB/s | ⭐⭐⭐ |
 | LPDDR4 | Cortex-A72 | Raspberry Pi 4 | 6.2 GB/s | 7.0 GB/s | ⭐⭐⭐ |
 | DDR4-2400 | Ryzen R1505G | HP t640 | 4.1 GB/s | 7.0 GB/s | ⭐⭐ |
+| DDR3 | i5-4590T | Fujitsu ESPRIMO Q920 | 3.6 GB/s | 4.4 GB/s | ⭐⭐ |
 | LPDDR2 | Cortex-A53 | Raspberry Pi 3 | 3.3 GB/s | 3.9 GB/s | ⭐⭐ |
 | DDR3L | Celeron J3355 | Synology DS218+ | 3.5 GB/s | 5.3 GB/s | ⭐⭐ |
 | DDR3 | Celeron 1007U | ASUS VM40B | 3.1 GB/s | 5.0 GB/s | ⭐⭐ |
