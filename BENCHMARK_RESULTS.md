@@ -4,7 +4,7 @@ This document contains comprehensive benchmark results for the `pingwinator/sysb
 
 ## Test Environment
 
-All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 26.0.1 (Apple M1), macOS 26.0.1 (Apple M1 Pro), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
+All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 26.0.1 (Apple M1/M1 Pro), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
 
 ### System Specifications
 
@@ -818,7 +818,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 - 8 test threads (4×Firestorm P-cores @ 3.2 GHz + 4×Icestorm E-cores @ 2.0 GHz)
 - Transferred: 20 GB
 - Architecture: ARM64 (aarch64)
-- Operating System: macOS 26.0.1 (15.0.1)
+- Operating System: macOS 26.0.1
 - **Two container platforms tested**: Apple Container framework and Docker Desktop
 
 **Performance (Apple Container):**
@@ -934,7 +934,7 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 #### WSL2 Performance Comparison (Same Hardware)
 
-**Operating System**: Windows 11 Home + WSL2 (Ubuntu 22.04.4 LTS)
+**Operating System**: Windows 11 Pro + WSL2 (Ubuntu 22.04.4 LTS)
 
 **WSL2 CPU Performance:**
 - Single-thread 64-bit: 222.11 evt/s (-49% vs native Ubuntu)
@@ -1351,7 +1351,23 @@ The `pingwinator/sysbench:latest` Docker image successfully executed on all eigh
 - ✅ Docker Desktop for Mac - Native ARM64 and x86_64 via Rosetta 2
 - Both platforms successfully run `pingwinator/sysbench:latest` with different performance characteristics
 
-Multi-architecture support is fully validated and production-ready across six architectures spanning 18 different hardware platforms, including macOS with both Apple Container and Docker Desktop.
+**Windows WSL2 Support:**
+- ✅ WSL2 (Windows Subsystem for Linux 2) - Tested on Windows 11 Pro + Ubuntu 22.04
+- ⚠️ **Performance Warning**: WSL2 shows severe performance degradation:
+  - CPU: -49% to -53% loss vs native Linux
+  - Memory: -80% write, -88% read vs native Linux
+- **Command syntax important**: Use `--entrypoint /usr/bin/sysbench` for custom parameters
+- **Example**:
+  ```bash
+  # Correct syntax for WSL2
+  docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest cpu --threads=8 --cpu-max-prime=20000 run
+
+  # This will NOT work on WSL2
+  docker run --rm pingwinator/sysbench:latest cpu --threads=8 --cpu-max-prime=20000 run
+  ```
+- **Recommendation**: Use native Linux or dual-boot for performance-critical workloads
+
+Multi-architecture support is fully validated and production-ready across six architectures spanning 18 different hardware platforms, including macOS with both Apple Container and Docker Desktop, and Windows with WSL2.
 
 ### Recommendations
 
