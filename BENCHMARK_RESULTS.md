@@ -4,7 +4,7 @@ This document contains comprehensive benchmark results for the `pingwinator/sysb
 
 ## Test Environment
 
-All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 15.0.1 (Apple M1), macOS 26.0.1 (Apple M1 Pro), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
+All tests were conducted on real hardware running Ubuntu 22.04/24.04 LTS (x86_64, ARM64, RISC-V), macOS 26.0.1 (Apple M1), macOS 26.0.1 (Apple M1 Pro), and Raspbian 10 Buster (ARMv6) using Docker containers. The sysbench Docker image successfully ran on all five architectures without any compatibility issues.
 
 ### System Specifications
 
@@ -55,6 +55,7 @@ docker run --rm pingwinator/sysbench:latest
 | System 8 | Cortex-A72 (RPi 4) | 575.31 | 1.74 ms | 35% |
 | System 18 | Intel Celeron J3355 | 467.41 | 2.13 ms | 28% |
 | System 16 | Intel Core i5-8250U | 436.43 | 2.29 ms | 27% |
+| System 16 (WSL) | Intel Core i5-8250U (WSL2) | 222.11 | 4.50 ms | 14% |
 | System 6 | Intel Core i3-8100T | 398.65 | 2.51 ms | 24% |
 | System 9 | Cortex-A53 (RPi 3) | 234.15 | 4.26 ms | 14% |
 | System 4 | SiFive U74-MC | 198.82 | 5.03 ms | 12% |
@@ -78,6 +79,7 @@ Celeron J3355  ██████               467 evt/s   (28%)
 i5-8250U       ██████               436 evt/s   (27%)
 i3-8100T       █████                399 evt/s   (24%)
 RPi 3 (A53)    ███                  234 evt/s   (14%)
+i5-8250U (WSL) ███                  222 evt/s   (14%)
 RISC-V U74     ██                   199 evt/s   (12%)
 Ryzen R1505G   ██                   193 evt/s   (12%)
 Celeron 1007U  ██                   161 evt/s   (10%)
@@ -144,6 +146,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 3 | Intel Pentium N6005 | 4 | 775.24 | **3,077.02** | 4.0x | 99% |
 | System 16 | Intel Core i5-8250U | 8 | 436.43 | **2,951.56** | 6.8x | 85% |
 | System 8 | Cortex-A72 (RPi 4) | 4 | 575.31 | **2,078.67** | 3.6x | 90% |
+| System 16 (WSL) | Intel Core i5-8250U (WSL2) | 8 | 222.11 | **1,379.15** | 6.2x | 78% |
 | System 6 | Intel Core i3-8100T | 4 | 398.65 | **1,590.39** | 4.0x | 99% |
 | System 9 | Cortex-A53 (RPi 3) | 4 | 234.15 | **808.37** | 3.5x | 86% |
 | System 4 | SiFive U74-MC | 4 | 198.82 | **789.96** | 4.0x | 99% |
@@ -154,6 +157,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | System 5 | Intel Celeron 1007U | 2 | 161.32 | **290.40** | 1.8x | 90% |
 | System 10 (32-bit) | Cortex-A76 (RPi 5) | 4 | 63.32 | **246.96** | 3.9x | 98% |
 | System 16 (32-bit) | Intel Core i5-8250U | 8 | 249.15 | **1,691.99** | 6.8x | 85% |
+| System 16 (WSL 32-bit) | Intel Core i5-8250U (WSL2) | 8 | 128.12 | **827.06** | 6.5x | 81% |
 | System 18 (32-bit) | Intel Celeron J3355 | 2 | 186.61 | **328.84** | 1.8x | 88% |
 | System 13 | Intel Celeron J1800 | 2 | 153.20 | **163.05** | 1.1x | 53% |
 | System 14 | AMD G-T56N | 2 | 63.01 | **121.86** | 1.9x | 97% |
@@ -324,6 +328,7 @@ docker run --rm --entrypoint /usr/bin/sysbench pingwinator/sysbench:latest \
 | **System 1** | Intel Core i5-13600 | 32 GB | DDR5-4800 | **18,617** | **104,141** | 5.6x |
 | **System 16** | Intel Core i5-8250U | 16 GB | DDR4 (?) | **15,175** | **29,964** | 2.0x |
 | **System 3** | Intel Pentium N6005 | 16 GB | DDR4-2933 | **11,611** | **25,173** | 2.2x |
+| **System 16 (WSL)** | Intel Core i5-8250U (WSL2) | 16 GB | DDR4 (WSL) | **2,956** | **3,597** | 1.2x |
 | **System 15** | Apple M1 (Container) | 8 GB | LPDDR4X (Unified) | **9,277** | **29,623** | 3.2x |
 | **System 15** | Apple M1 (Docker) | 8 GB | LPDDR4X (Unified) | **6,682** | **19,804** | 3.0x |
 | **System 2** | Rockchip RK3588S | 16 GB | LPDDR4X/5 | **11,463** | **19,457** | 1.7x |
@@ -927,6 +932,40 @@ RPi Zero W     ░                         52 MiB/s (0.05%)
 
 **Verdict**: Lenovo ThinkPad T480 with i5-8250U demonstrates that modern laptop processors can compete with desktop systems. The 85% HyperThreading efficiency and strong memory performance make it an excellent choice for mobile development and general computing workloads.
 
+#### WSL2 Performance Comparison (Same Hardware)
+
+**Operating System**: Windows 11 Home + WSL2 (Ubuntu 22.04.4 LTS)
+
+**WSL2 CPU Performance:**
+- Single-thread 64-bit: 222.11 evt/s (-49% vs native Ubuntu)
+- Multi-thread 64-bit: 1,379.15 evt/s (8 threads, -53% vs native, 78% efficiency)
+- Single-thread 32-bit: 128.12 evt/s (-42% vs WSL 64-bit, -49% vs native 32-bit)
+- Multi-thread 32-bit: 827.06 evt/s (8 threads, -51% vs native 32-bit, 81% efficiency)
+
+**WSL2 Memory Performance:**
+- Write 64-bit: 2,955.53 MiB/s (2.9 GB/s, -80% vs native)
+- Read 64-bit: 3,597.38 MiB/s (3.5 GB/s, -88% vs native)
+- Write 32-bit: 1,216.15 MiB/s (1.2 GB/s, -59% vs WSL 64-bit)
+- Read 32-bit: 1,482.68 MiB/s (1.5 GB/s, -59% vs WSL 64-bit)
+- Read/Write Ratio: 1.2x (balanced, vs 2.0x native)
+
+**WSL2 Performance Analysis:**
+- **Massive CPU penalty**: -49% to -53% CPU performance loss vs native Ubuntu
+- **Catastrophic memory loss**: -80% write, -88% read vs native Ubuntu
+- **Virtualization overhead**: WSL2 runs Linux kernel in Hyper-V VM
+- **Good scaling preservation**: 78% multi-thread efficiency (vs 85% native)
+- **Memory bandwidth collapse**: From 30 GB/s read to 3.6 GB/s (-88%)
+- **32-bit additional penalty**: Another -42% CPU, -59% memory on top of WSL overhead
+
+**Key WSL2 Findings:**
+1. **WSL2 unsuitable for performance-critical workloads** - Nearly 90% memory loss
+2. **CPU virtualization overhead manageable** - "Only" 50% loss
+3. **Memory subsystem severely impacted** - Hyper-V VM overhead dominates
+4. **Use native Linux for benchmarks** - WSL2 results not representative
+5. **Development use only** - WSL2 good for compatibility, not performance
+
+**Verdict on WSL2**: While convenient for development and testing, WSL2 shows catastrophic performance losses (80-88% memory, 49-53% CPU) compared to native Linux. For any performance-sensitive work, use native Ubuntu or dual-boot instead of WSL2.
+
 ---
 
 ### System 17: MacBook Pro 14" (2021) - Apple M1 Pro + LPDDR5 Unified Memory
@@ -1308,7 +1347,7 @@ The `pingwinator/sysbench:latest` Docker image successfully executed on all eigh
 - ✅ linux/386 (i386) - 32-bit Intel/AMD tested on all x86_64 systems
 
 **macOS Container Support:**
-- ✅ Apple Container framework (macOS 15.0.1) - Native ARM64 and x86_64 via Rosetta 2
+- ✅ Apple Container framework (macOS 26.0.1) - Native ARM64 and x86_64 via Rosetta 2
 - ✅ Docker Desktop for Mac - Native ARM64 and x86_64 via Rosetta 2
 - Both platforms successfully run `pingwinator/sysbench:latest` with different performance characteristics
 
