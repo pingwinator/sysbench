@@ -167,26 +167,18 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/riscv64,linux/arm/v
 
 ## Benchmark Results
 
-This image has been extensively tested on **21 different systems** across **6 architectures**:
-
-### Tested Platforms
-
-- **13 x86_64 systems**: Intel i5-13600, i5-8250U, i5-6500, i5-4590T, Pentium N6005, i3-8100T, Celeron 1007U/J4025/J4105/J3355/J1800, AMD Ryzen R1505G, AMD G-T56N (Fustro S900 - D3003)
-- **6 ARM64 systems**: Apple M1 Mac mini, Apple M1 Pro MacBook Pro 14", Rockchip RK3588S, Raspberry Pi 5/4/3
-- **1 ARMv6 system**: Raspberry Pi Zero W
-- **1 RISC-V system**: StarFive VisionFive 2
+This image has been extensively tested on **20+ different systems** across **6 architectures**.
 
 ### Key Findings
 
-- **NEW CHAMPION**: Apple M1 (4,046 evt/s) - 2.46x faster than Intel i5-13600 in single-thread!
-- **Performance range**: 1,400x difference between fastest (Apple M1: 4,046 evt/s) and slowest (RPi Zero W: 2.89 evt/s)
-- **Best efficiency**: Intel Pentium N6005, SiFive U74 - 99% multi-thread scaling
-- **ARM dominance**: Apple M1 proves ARM can outperform x86 in both efficiency and raw performance
-- **32-bit penalty**: Up to 94% performance loss on ARM64, but 0% on AMD Ryzen R1505G
-- **NAS performance**: Synology DS220+ (642 evt/s) significantly outperforms QNAP TS-251+ (153 evt/s)
-- **Rosetta 2 efficiency**: Only 27% performance loss for x86_64 emulation on Apple M1
+- **Single-Thread Champion**: Apple M1 is the king of single-threaded performance with **4,046 events/sec**, outperforming the Intel i5-13600 by 2.46x.
+- **Multi-Thread Champion**: The Intel i5-13600 dominates multi-threaded workloads with **18,113 events/sec**, leveraging its 20-core hybrid architecture.
+- **Best Scaling Efficiency**: Simpler, homogeneous architectures (like the Intel Pentium N6005, Core i3-8100T, and SiFive U74) achieve near-perfect **99% scaling efficiency**.
+- **ARM vs x86**: Modern ARM SoCs like the Apple M1, Rockchip RK3588S, and Raspberry Pi 5 are highly competitive and often outperform budget x86 CPUs.
+- **32-bit Performance**: A significant performance penalty exists in 32-bit mode on modern CPUs. The AMD Ryzen R1505G is a standout, showing **0% performance loss**.
+- **Virtualization & Emulation**: Apple's Rosetta 2 is remarkably efficient (-27% loss), while WSL2 shows catastrophic memory performance degradation (-88%).
 
-📊 **Full benchmark results**: See [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md) for detailed performance analysis, comparison charts, and platform-specific insights.
+📊 **Full benchmark results**: See [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md) for top performers, or visit the [📊 Wiki](https://github.com/pingwinator/sysbench/wiki) for detailed performance analysis, comparison charts, and platform-specific insights.
 
 ### Container Runtime Support
 
@@ -203,4 +195,5 @@ This Docker image packages sysbench, which is licensed under GPL-2.0.
 
 - [Sysbench GitHub Repository](https://github.com/akopytov/sysbench)
 - [Sysbench Documentation](https://github.com/akopytov/sysbench#documentation)
-- [Full Benchmark Results](BENCHMARK_RESULTS.md)
+- [Benchmark Results Summary](BENCHMARK_RESULTS.md)
+- [Complete Benchmark Results (Wiki)](https://github.com/pingwinator/sysbench/wiki)
